@@ -59,5 +59,17 @@ begin
   Nat_Reader.Trace (rd);
 
   res := Nat_rmtld3.Prop (trace, 1, 0);
+  res := Nat_rmtld3.Not3 (trace, 1, 0);
+  res := Nat_rmtld3.Or3 (trace, 1, 0);
+  res := Nat_rmtld3.Less3 (trace, 1, 0);
+  res := Nat_rmtld3.Until_less (trace, 1, 0);
+  res := Nat_rmtld3.Eventually_equal (trace, 1, 0);
+  res := Nat_rmtld3.Eventually_less_unbounded (trace, 1, 0);
+  res := Nat_rmtld3.Always_equal (trace, 1, 0);
+  res := Nat_rmtld3.Always_less (trace, 1, 0);
+  res := Nat_rmtld3.Since_less (trace, 1, 0);
+  res := Nat_rmtld3.Pasteventually_equal (trace, 1, 0);
+  res := Nat_rmtld3.Historically_equal (trace, 1, 0);
+  res := Nat_rmtld3.Historically_less (trace, 1, 0);
 
 end Test;
