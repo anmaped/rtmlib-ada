@@ -21,63 +21,159 @@ with Reader;
 with Reader.Rmtld3;
 
 generic
-    with package R is new Reader (<>);
-    with package RR is new R.Rmtld3 (<>);
+   with package R is new Reader (<>);
+   with package RR is new R.Rmtld3 (<>);
 
-package Rmtld3 is
+package Rmtld3
+is
 
-    type Three_Valued_Type is (True, False, Unknown);
+   type Duration_Type is (DSome, DNone);
 
-    function Prop
-       (Trace : in out RR.RMTLD3_Reader_Type; Proposition : in R.B.E.Data_type;
-        Time  : in     R.B.E.Time_Type) return Three_Valued_Type;
+   type Duration_Record (Option : Duration_Type) is record
+      case Option is
+         when DSome =>
+            Value : Float;  -- Holds integer value
 
-    function Not3
-       (Trace : in out RR.RMTLD3_Reader_Type; Proposition : in R.B.E.Data_type;
-        Time  : in     R.B.E.Time_Type) return Three_Valued_Type;
+         when DNone =>
+            null;             -- No additional data
+      end case;
+   end record;
 
-    function Or3
-       (Trace : in out RR.RMTLD3_Reader_Type; Proposition : in R.B.E.Data_type;
-        Time  : in     R.B.E.Time_Type) return Three_Valued_Type;
+   function mk_duration (x : Float) return Duration_Record;
 
-    function Less3
-       (Trace : in out RR.RMTLD3_Reader_Type; Proposition : in R.B.E.Data_type;
-        Time  : in     R.B.E.Time_Type) return Three_Valued_Type;
+   function isDuration (x : Duration_Record) return Boolean;
 
-    function Until_less
-       (Trace : in out RR.RMTLD3_Reader_Type; Proposition : in R.B.E.Data_type;
-        Time  : in     R.B.E.Time_Type) return Three_Valued_Type;
+   generic
+      Value : in  Float;
+   function Cons
+     (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
+      return Duration_Record;
 
-    function Eventually_equal
-       (Trace : in out RR.RMTLD3_Reader_Type; Proposition : in R.B.E.Data_type;
-        Time  : in     R.B.E.Time_Type) return Three_Valued_Type;
+   generic
+      with
+        function tm1
+          (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
+           return Duration_Record is <>;
+      with
+        function tm2
+          (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
+           return Duration_Record is <>;
+   function Sum
+     (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
+      return Duration_Record;
 
-    function Eventually_less_unbounded
-       (Trace : in out RR.RMTLD3_Reader_Type; Proposition : in R.B.E.Data_type;
-        Time  : in     R.B.E.Time_Type) return Three_Valued_Type;
+   generic
+      with
+        function tm1
+          (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
+           return Duration_Record is <>;
+      with
+        function tm2
+          (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
+           return Duration_Record is <>;
+   function Times
+     (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
+      return Duration_Record;
 
-    function Always_equal
-       (Trace : in out RR.RMTLD3_Reader_Type; Proposition : in R.B.E.Data_type;
-        Time  : in     R.B.E.Time_Type) return Three_Valued_Type;
+   type Three_Valued_Type is (True, False, Unknown);
 
-    function Always_less
-       (Trace : in out RR.RMTLD3_Reader_Type; Proposition : in R.B.E.Data_type;
-        Time  : in     R.B.E.Time_Type) return Three_Valued_Type;
+   function mk_true
+     (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
+      return Three_Valued_Type;
 
-    function Since_less
-       (Trace : in out RR.RMTLD3_Reader_Type; Proposition : in R.B.E.Data_type;
-        Time  : in     R.B.E.Time_Type) return Three_Valued_Type;
+   generic
+      Proposition : in  Natural;
+   function Prop
+     (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
+      return Three_Valued_Type;
 
-    function Pasteventually_equal
-       (Trace : in out RR.RMTLD3_Reader_Type; Proposition : in R.B.E.Data_type;
-        Time  : in     R.B.E.Time_Type) return Three_Valued_Type;
+   generic
+      with
+        function fm
+          (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
+           return Three_Valued_Type is <>;
+   function Not3
+     (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
+      return Three_Valued_Type;
 
-    function Historically_equal
-       (Trace : in out RR.RMTLD3_Reader_Type; Proposition : in R.B.E.Data_type;
-        Time  : in     R.B.E.Time_Type) return Three_Valued_Type;
+   generic
+      with
+        function fm1
+          (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
+           return Three_Valued_Type is <>;
+      with
+        function fm2
+          (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
+           return Three_Valued_Type is <>;
+   function Or3
+     (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
+      return Three_Valued_Type;
 
-    function Historically_less
-       (Trace : in out RR.RMTLD3_Reader_Type; Proposition : in R.B.E.Data_type;
-        Time  : in     R.B.E.Time_Type) return Three_Valued_Type;
+   generic
+      with
+        function tm1
+          (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
+           return Duration_Record is <>;
+      with
+        function tm2
+          (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
+           return Duration_Record is <>;
+   function Less3
+     (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
+      return Three_Valued_Type;
+
+   generic
+      with
+        function fm1
+          (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
+           return Three_Valued_Type is <>;
+      with
+        function fm2
+          (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
+           return Three_Valued_Type is <>;
+   function Until_less
+     (Trace       : in out RR.RMTLD3_Reader_Type;
+      Proposition : in R.B.E.Data_type;
+      Time        : in R.B.E.Time_Type) return Three_Valued_Type;
+
+   function Eventually_equal
+     (Trace       : in out RR.RMTLD3_Reader_Type;
+      Proposition : in R.B.E.Data_type;
+      Time        : in R.B.E.Time_Type) return Three_Valued_Type;
+
+   function Eventually_less_unbounded
+     (Trace       : in out RR.RMTLD3_Reader_Type;
+      Proposition : in R.B.E.Data_type;
+      Time        : in R.B.E.Time_Type) return Three_Valued_Type;
+
+   function Always_equal
+     (Trace       : in out RR.RMTLD3_Reader_Type;
+      Proposition : in R.B.E.Data_type;
+      Time        : in R.B.E.Time_Type) return Three_Valued_Type;
+
+   function Always_less
+     (Trace       : in out RR.RMTLD3_Reader_Type;
+      Proposition : in R.B.E.Data_type;
+      Time        : in R.B.E.Time_Type) return Three_Valued_Type;
+
+   function Since_less
+     (Trace       : in out RR.RMTLD3_Reader_Type;
+      Proposition : in R.B.E.Data_type;
+      Time        : in R.B.E.Time_Type) return Three_Valued_Type;
+
+   function Pasteventually_equal
+     (Trace       : in out RR.RMTLD3_Reader_Type;
+      Proposition : in R.B.E.Data_type;
+      Time        : in R.B.E.Time_Type) return Three_Valued_Type;
+
+   function Historically_equal
+     (Trace       : in out RR.RMTLD3_Reader_Type;
+      Proposition : in R.B.E.Data_type;
+      Time        : in R.B.E.Time_Type) return Three_Valued_Type;
+
+   function Historically_less
+     (Trace       : in out RR.RMTLD3_Reader_Type;
+      Proposition : in R.B.E.Data_type;
+      Time        : in R.B.E.Time_Type) return Three_Valued_Type;
 
 end Rmtld3;

@@ -18,7 +18,7 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 generic
-    type Data_Type is private;
+    type Data_Type is range <>;
 package Event is
     type Time_Type is new Natural;
     type Event_Type is private;

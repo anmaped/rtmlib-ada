@@ -23,23 +23,91 @@ package body Rmtld3 is
    use RR;
    use R;
 
+   function mk_duration (x : Float) return Duration_Record is
+      y : Duration_Record (DSome);
+   begin
+      y.Value := x;
+      return y;
+   end mk_duration;
+
+   function isDuration (x : Duration_Record) return Boolean is
+   begin
+      if x.Option = DSome then
+         return true;
+      else
+         return false;
+      end if;
+   end isDuration;
+
+   function Cons
+     (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
+      return Duration_Record
+   is
+      x : Duration_Record := mk_duration (Value);
+   begin
+      return x;
+   end Cons;
+
+   function Sum
+     (Trace : in out RMTLD3_Reader_Type; Time : in Time_Type)
+      return Duration_Record
+   is
+      x : Duration_Record := tm1 (Trace => Trace, Time => Time);
+      y : Duration_Record := tm2 (Trace => Trace, Time => Time);
+      z : Duration_Record(DSome);
+      z_none : Duration_Record(Dnone);
+   begin
+      if isDuration (x) and isDuration (y) then
+         z.Value := x.Value + y.Value;
+         return z;
+      else
+         return z_none;
+      end if;
+   end Sum;
+
+   function Times
+     (Trace : in out RMTLD3_Reader_Type; Time : in Time_Type)
+      return Duration_Record
+   is
+      x : Duration_Record := tm1 (Trace => Trace, Time => Time);
+      y : Duration_Record := tm2 (Trace => Trace, Time => Time);
+      z : Duration_Record(DSome);
+      z_none : Duration_Record(Dnone);
+   begin
+      if isDuration (x) and isDuration (y) then
+         z.Value := x.Value * y.Value;
+         return z;
+      else
+         return z_none;
+      end if;
+   end Times;
+
+   function mk_true
+     (Trace : in out RMTLD3_Reader_Type; Time : in Time_Type)
+      return Three_Valued_Type is
+   begin
+      return True;
+   end mk_true;
+
    function Prop
-     (Trace : in out RMTLD3_Reader_Type; Proposition : in Data_type;
-      Time  : in     Time_Type) return Three_Valued_Type
+     (Trace : in out RMTLD3_Reader_Type; Time : in Time_Type)
+      return Three_Valued_Type
    is
       E, E_Next : Event_Type;
       Status    : Error_Type;
    begin
       Status := Read (Trace, E);
 
-      if Status = AVAILABLE and then Read_Next (Trace, E_Next) = AVAILABLE
-        and then Get_Time (E) <= Time and then Time < Get_Time (E_Next)
+      if Status = AVAILABLE
+        and then Read_Next (Trace, E_Next) = AVAILABLE
+        and then Get_Time (E) <= Time
+        and then Time < Get_Time (E_Next)
       then
 
          --Debug_V_RMTLD3
          --  (Time, Proposition, Get_Data (E), Get_Time (E), Get_Data (E_Next),
          --   Get_Time (E_Next));
-         if Get_Data (E) = Proposition then
+         if Get_Data (E) = Data_Type (Proposition) then
             return True;
          else
             return False;
@@ -53,51 +121,71 @@ package body Rmtld3 is
    end Prop;
 
    function Not3
-     (Trace : in out RMTLD3_Reader_Type; Proposition : in Data_type;
-      Time  : in     Time_Type) return Three_Valued_Type
+     (Trace : in out RMTLD3_Reader_Type; Time : in Time_Type)
+      return Three_Valued_Type
    is
       E, E_Next : Event_Type;
       Status    : Error_Type;
    begin
-      return Unknown;
+      return fm (Trace => Trace, Time => Time);
    end Not3;
 
    function Or3
-     (Trace : in out RMTLD3_Reader_Type; Proposition : in Data_type;
-      Time  : in     Time_Type) return Three_Valued_Type
+     (Trace : in out RMTLD3_Reader_Type; Time : in Time_Type)
+      return Three_Valued_Type
    is
-      E, E_Next : Event_Type;
-      Status    : Error_Type;
+      x : Three_Valued_Type := fm1 (Trace => Trace, Time => Time);
+      y : Three_Valued_Type := fm2 (Trace => Trace, Time => Time);
    begin
-      return Unknown;
+      if x = Unknown or y = Unknown then
+         return Unknown;
+      else
+         if x = True or y = True then
+            return True;
+         else
+            return False;
+         end if;
+
+      end if;
 
    end Or3;
 
    function Less3
-     (Trace : in out RMTLD3_Reader_Type; Proposition : in Data_type;
-      Time  : in     Time_Type) return Three_Valued_Type
+     (Trace : in out RMTLD3_Reader_Type; Time : in Time_Type)
+      return Three_Valued_Type
    is
-      E, E_Next : Event_Type;
-      Status    : Error_Type;
+      x : Duration_Record := tm1 (Trace => Trace, Time => Time);
+      y : Duration_Record := tm2 (Trace => Trace, Time => Time);
    begin
-      return Unknown;
-
+      if isDuration (x) and isDuration (y) then
+         if x.Value < y.Value then
+            return True;
+         else
+            return False;
+         end if;
+      else
+         return Unknown;
+      end if;
    end Less3;
 
    function Until_less
-     (Trace : in out RMTLD3_Reader_Type; Proposition : in Data_type;
-      Time  : in     Time_Type) return Three_Valued_Type
+     (Trace       : in out RMTLD3_Reader_Type;
+      Proposition : in Data_type;
+      Time        : in Time_Type) return Three_Valued_Type
    is
       E, E_Next : Event_Type;
       Status    : Error_Type;
    begin
-      return Unknown;
+      -- fm1(Trace => Trace, Time => Time)
+      -- fm2(Trace => Trace, Time => Time)
+      return fm1 (Trace => Trace, Time => Time);
 
    end Until_less;
 
    function Eventually_equal
-     (Trace : in out RMTLD3_Reader_Type; Proposition : in Data_type;
-      Time  : in     Time_Type) return Three_Valued_Type
+     (Trace       : in out RMTLD3_Reader_Type;
+      Proposition : in Data_type;
+      Time        : in Time_Type) return Three_Valued_Type
    is
       E, E_Next : Event_Type;
       Status    : Error_Type;
@@ -107,8 +195,9 @@ package body Rmtld3 is
    end Eventually_equal;
 
    function Eventually_less_unbounded
-     (Trace : in out RMTLD3_Reader_Type; Proposition : in Data_type;
-      Time  : in     Time_Type) return Three_Valued_Type
+     (Trace       : in out RMTLD3_Reader_Type;
+      Proposition : in Data_type;
+      Time        : in Time_Type) return Three_Valued_Type
    is
       E, E_Next : Event_Type;
       Status    : Error_Type;
@@ -118,8 +207,9 @@ package body Rmtld3 is
    end Eventually_less_unbounded;
 
    function Always_equal
-     (Trace : in out RMTLD3_Reader_Type; Proposition : in Data_type;
-      Time  : in     Time_Type) return Three_Valued_Type
+     (Trace       : in out RMTLD3_Reader_Type;
+      Proposition : in Data_type;
+      Time        : in Time_Type) return Three_Valued_Type
    is
       E, E_Next : Event_Type;
       Status    : Error_Type;
@@ -129,8 +219,9 @@ package body Rmtld3 is
    end Always_equal;
 
    function Always_less
-     (Trace : in out RMTLD3_Reader_Type; Proposition : in Data_type;
-      Time  : in     Time_Type) return Three_Valued_Type
+     (Trace       : in out RMTLD3_Reader_Type;
+      Proposition : in Data_type;
+      Time        : in Time_Type) return Three_Valued_Type
    is
       E, E_Next : Event_Type;
       Status    : Error_Type;
@@ -140,8 +231,9 @@ package body Rmtld3 is
    end Always_less;
 
    function Since_less
-     (Trace : in out RMTLD3_Reader_Type; Proposition : in Data_type;
-      Time  : in     Time_Type) return Three_Valued_Type
+     (Trace       : in out RMTLD3_Reader_Type;
+      Proposition : in Data_type;
+      Time        : in Time_Type) return Three_Valued_Type
    is
       E, E_Next : Event_Type;
       Status    : Error_Type;
@@ -151,8 +243,9 @@ package body Rmtld3 is
    end Since_less;
 
    function Pasteventually_equal
-     (Trace : in out RMTLD3_Reader_Type; Proposition : in Data_type;
-      Time  : in     Time_Type) return Three_Valued_Type
+     (Trace       : in out RMTLD3_Reader_Type;
+      Proposition : in Data_type;
+      Time        : in Time_Type) return Three_Valued_Type
    is
       E, E_Next : Event_Type;
       Status    : Error_Type;
@@ -162,8 +255,9 @@ package body Rmtld3 is
    end Pasteventually_equal;
 
    function Historically_equal
-     (Trace : in out RMTLD3_Reader_Type; Proposition : in Data_type;
-      Time  : in     Time_Type) return Three_Valued_Type
+     (Trace       : in out RMTLD3_Reader_Type;
+      Proposition : in Data_type;
+      Time        : in Time_Type) return Three_Valued_Type
    is
       E, E_Next : Event_Type;
       Status    : Error_Type;
@@ -173,8 +267,9 @@ package body Rmtld3 is
    end Historically_equal;
 
    function Historically_less
-     (Trace : in out RMTLD3_Reader_Type; Proposition : in Data_type;
-      Time  : in     Time_Type) return Three_Valued_Type
+     (Trace       : in out RMTLD3_Reader_Type;
+      Proposition : in Data_type;
+      Time        : in Time_Type) return Three_Valued_Type
    is
       E, E_Next : Event_Type;
       Status    : Error_Type;
