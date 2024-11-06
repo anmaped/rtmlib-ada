@@ -19,8 +19,8 @@
 
 generic
     type Data_Type is range <>;
+    type Time_Type is delta <>;
 package Event is
-    type Time_Type is new Natural;
     type Event_Type is private;
 
     -- Constructor without parameters
