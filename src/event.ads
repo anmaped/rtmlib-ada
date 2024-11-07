@@ -18,52 +18,51 @@
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 generic
-    type Data_Type is range <>;
-    type Time_Type is delta <>;
+   type Data_Type is range <>;
+   type Time_Type is delta <> ;
 package Event is
-    type Event_Type is private;
+   type Event_Type is private;
 
-    -- Constructor without parameters
-    function Create return Event_Type;
+   -- Constructor without parameters
+   function Create return Event_Type;
 
-    -- Constructor with data
-    function Create
-       (Data : in Data_Type) return Event_Type;
+   -- Constructor with data
+   function Create (Data : in Data_Type) return Event_Type;
 
-    -- Constructor with data and time
-    function Create
-       (Data : in Data_Type; Time : in Time_Type) return Event_Type;
+   -- Constructor with data and time
+   function Create
+     (Data : in Data_Type; Time : in Time_Type) return Event_Type;
 
-    -- Getters
-    function Get_Data (Self : in Event_Type) return Data_Type;
-    function Get_Time (Self : in Event_Type) return Time_Type;
+   -- Getters
+   function Get_Data (Self : in Event_Type) return Data_Type;
+   function Get_Time (Self : in Event_Type) return Time_Type;
 
-    -- Setters
-    procedure Set_Data (Self : in out Event_Type; Data : in Data_Type);
-    procedure Set_Time (Self : in out Event_Type; Time : in Time_Type);
+   -- Setters
+   procedure Set_Data (Self : in out Event_Type; Data : in Data_Type);
+   procedure Set_Time (Self : in out Event_Type; Time : in Time_Type);
 
-    -- Trace function
-    procedure Trace (Self : in Event_Type);
+   -- Trace function
+   procedure Trace (Self : in Event_Type);
 
-    -- Operator overloads
-    function "<" (Left, Right : Event_Type) return Boolean;
-    function "<=" (Left, Right : Event_Type) return Boolean;
-    function ">" (Left, Right : Event_Type) return Boolean;
-    function ">=" (Left, Right : Event_Type) return Boolean;
-    function "=" (Left, Right : Event_Type) return Boolean;
+   -- Operator overloads
+   function "<" (Left, Right : Event_Type) return Boolean;
+   function "<=" (Left, Right : Event_Type) return Boolean;
+   function ">" (Left, Right : Event_Type) return Boolean;
+   function ">=" (Left, Right : Event_Type) return Boolean;
+   function "=" (Left, Right : Event_Type) return Boolean;
 
-    -- Time comparison overloads
-    function "<" (Event_Time : Time_Type; Event : Event_Type) return Boolean;
-    function "<=" (Event_Time : Time_Type; Event : Event_Type) return Boolean;
-    function ">" (Event_Time : Time_Type; Event : Event_Type) return Boolean;
-    function ">=" (Event_Time : Time_Type; Event : Event_Type) return Boolean;
-    function "=" (Event_Time : Time_Type; Event : Event_Type) return Boolean;
+   -- Time comparison overloads
+   function "<" (Event_Time : Time_Type; Event : Event_Type) return Boolean;
+   function "<=" (Event_Time : Time_Type; Event : Event_Type) return Boolean;
+   function ">" (Event_Time : Time_Type; Event : Event_Type) return Boolean;
+   function ">=" (Event_Time : Time_Type; Event : Event_Type) return Boolean;
+   function "=" (Event_Time : Time_Type; Event : Event_Type) return Boolean;
 
 private
 
-    type Event_Type is record
-        Data : Data_Type;
-        Time : Time_Type;
-    end record;
+   type Event_Type is record
+      Data : Data_Type;
+      Time : Time_Type;
+   end record;
 
 end Event;

@@ -21,12 +21,14 @@ with GNAT.Source_Info;
 
 package Log is
 
-    procedure Error
-       (Msg : String; Entity : String := GNAT.Source_Info.Enclosing_Entity;
-        Location : String := GNAT.Source_Info.Source_Location);
+   procedure Error
+     (Msg      : String;
+      Entity   : String := GNAT.Source_Info.Enclosing_Entity;
+      Location : String := GNAT.Source_Info.Source_Location);
 
-    procedure Msg
-       (Msg : String; Entity : String := GNAT.Source_Info.Enclosing_Entity;
-        Location : String := GNAT.Source_Info.Source_Location);
+   procedure Msg
+     (Msg      : String;
+      Entity   : String := GNAT.Source_Info.Enclosing_Entity;
+      Location : String := GNAT.Source_Info.Source_Location);
 
 end Log;

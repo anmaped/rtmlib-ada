@@ -29,7 +29,7 @@ package Reader.Rmtld3 is
    -- Constructors
    overriding
    function Create (Buf : Buffer_Access_Type) return RMTLD3_Reader_Type;
-   
+
    function Create (Reader : Reader_Type) return RMTLD3_Reader_Type;
 
    -- Resets cursor in the reader
@@ -37,7 +37,8 @@ package Reader.Rmtld3 is
 
    -- Sets cursor at time t
    function Set
-     (Reader : in out RMTLD3_Reader_Type; Time : in Time_Type) return Error_Type;
+     (Reader : in out RMTLD3_Reader_Type; Time : in Time_Type)
+      return Error_Type;
 
    -- Sets cursor
    --function Set_Cursor(Cursor_In : in out Natural) return Error_Type;
@@ -46,31 +47,36 @@ package Reader.Rmtld3 is
    --function Get_Cursor return Natural;
 
    -- Increment current cursor
-   function Increment_Cursor (Reader : in out RMTLD3_Reader_Type) return Error_Type;
+   function Increment_Cursor
+     (Reader : in out RMTLD3_Reader_Type) return Error_Type;
 
    -- Decrement current cursor
-   function Decrement_Cursor (Reader : in out RMTLD3_Reader_Type) return Error_Type;
+   function Decrement_Cursor
+     (Reader : in out RMTLD3_Reader_Type) return Error_Type;
 
    --  Pull event
    --function Pull (Event : out Event_Type) return Error_Type;
 
    --  read event without removing it from the buffer
    function Read
-     (Reader : in out RMTLD3_Reader_Type; Event : out Event_Type) return Error_Type;
+     (Reader : in out RMTLD3_Reader_Type; Event : out Event_Type)
+      return Error_Type;
 
    --  read next event without removing it from the buffer
    function Read_Next
-     (Reader : in out RMTLD3_Reader_Type; Event : out Event_Type) return Error_Type;
+     (Reader : in out RMTLD3_Reader_Type; Event : out Event_Type)
+      return Error_Type;
 
    --  read previous event without removing it from the buffer
    function Read_Previous
-     (Reader : in out RMTLD3_Reader_Type; Event : out Event_Type) return Error_Type;
+     (Reader : in out RMTLD3_Reader_Type; Event : out Event_Type)
+      return Error_Type;
 
    --  Current buffer length of the reader
    --function Length return Size_Type;
 
    --  Number of reader's consumed elements from the buffer
-   function Consumed(Reader : in out RMTLD3_Reader_Type) return Natural;
+   function Consumed (Reader : in out RMTLD3_Reader_Type) return Natural;
 
    --  Enable debug message for reader
    --procedure Debug;

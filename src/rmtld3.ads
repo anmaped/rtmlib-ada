@@ -133,47 +133,47 @@ is
            return Three_Valued_Type is <>;
    function Until_less
      (Trace       : in out RR.RMTLD3_Reader_Type;
-      Proposition : in R.B.E.Data_type;
+      Proposition : in R.B.E.Data_Type;
       Time        : in R.B.E.Time_Type) return Three_Valued_Type;
 
    function Eventually_equal
      (Trace       : in out RR.RMTLD3_Reader_Type;
-      Proposition : in R.B.E.Data_type;
+      Proposition : in R.B.E.Data_Type;
       Time        : in R.B.E.Time_Type) return Three_Valued_Type;
 
    function Eventually_less_unbounded
      (Trace       : in out RR.RMTLD3_Reader_Type;
-      Proposition : in R.B.E.Data_type;
+      Proposition : in R.B.E.Data_Type;
       Time        : in R.B.E.Time_Type) return Three_Valued_Type;
 
    function Always_equal
      (Trace       : in out RR.RMTLD3_Reader_Type;
-      Proposition : in R.B.E.Data_type;
+      Proposition : in R.B.E.Data_Type;
       Time        : in R.B.E.Time_Type) return Three_Valued_Type;
 
    function Always_less
      (Trace       : in out RR.RMTLD3_Reader_Type;
-      Proposition : in R.B.E.Data_type;
+      Proposition : in R.B.E.Data_Type;
       Time        : in R.B.E.Time_Type) return Three_Valued_Type;
 
    function Since_less
      (Trace       : in out RR.RMTLD3_Reader_Type;
-      Proposition : in R.B.E.Data_type;
+      Proposition : in R.B.E.Data_Type;
       Time        : in R.B.E.Time_Type) return Three_Valued_Type;
 
    function Pasteventually_equal
      (Trace       : in out RR.RMTLD3_Reader_Type;
-      Proposition : in R.B.E.Data_type;
+      Proposition : in R.B.E.Data_Type;
       Time        : in R.B.E.Time_Type) return Three_Valued_Type;
 
    function Historically_equal
      (Trace       : in out RR.RMTLD3_Reader_Type;
-      Proposition : in R.B.E.Data_type;
+      Proposition : in R.B.E.Data_Type;
       Time        : in R.B.E.Time_Type) return Three_Valued_Type;
 
    function Historically_less
      (Trace       : in out RR.RMTLD3_Reader_Type;
-      Proposition : in R.B.E.Data_type;
+      Proposition : in R.B.E.Data_Type;
       Time        : in R.B.E.Time_Type) return Three_Valued_Type;
 
 end Rmtld3;

@@ -69,9 +69,12 @@ package body Reader is
          Reader.Bottom := Reader.Bottom + 1;
 
          Log.Msg
-           ("[Reader.Pull] length:" & Natural'Image (Length (Reader)) & " bottom:" &
-            Natural'Image (Reader.Bottom) & " top:" &
-            Natural'Image (Reader.Top));
+           ("[Reader.Pull] length:"
+            & Natural'Image (Length (Reader))
+            & " bottom:"
+            & Natural'Image (Reader.Bottom)
+            & " top:"
+            & Natural'Image (Reader.Top));
 
          if Read (Reader.Buffer.all, Reader.Bottom, Event) = OK then
             Reader.Timestamp := Get_Time (Event);
@@ -91,8 +94,7 @@ package body Reader is
    end Pull;
 
    function Pop
-     (Reader : in out Reader_Type; Event : out Event_Type) return Error_Type
-   is
+     (Reader : in out Reader_Type; Event : out Event_Type) return Error_Type is
    begin
       if Length (Reader) > 0 then
          Reader.Top := Reader.Top - 1;
@@ -108,8 +110,12 @@ package body Reader is
       end if;
 
       Log.Msg
-        ("[Reader.Pop] length:" & Integer'Image (Length (Reader)) & " bottom:" &
-         Integer'Image (Reader.Bottom) & " top:" & Integer'Image (Reader.Top));
+        ("[Reader.Pop] length:"
+         & Integer'Image (Length (Reader))
+         & " bottom:"
+         & Integer'Image (Reader.Bottom)
+         & " top:"
+         & Integer'Image (Reader.Top));
 
       return Unavailable;
    end Pop;
@@ -122,8 +128,8 @@ package body Reader is
 
       if Top < Bot then
          if Gap (Reader) = Gap then
-            Reader.Top       := Top;
-            Reader.Bottom    := Bot;
+            Reader.Top := Top;
+            Reader.Bottom := Bot;
             Reader.Timestamp := TS;
             return Gap;
          else
@@ -135,8 +141,8 @@ package body Reader is
             Reader.Top := Top;
             return No_Gap;
          else
-            Reader.Top       := Top;
-            Reader.Bottom    :=
+            Reader.Top := Top;
+            Reader.Bottom :=
               (if (Bot < Reader.Bottom and Bot < Top) then Reader.Bottom
                else Bot);
             Reader.Timestamp :=
@@ -146,8 +152,8 @@ package body Reader is
          end if;
       else
          if Reader.Top = 0 and then Reader.Bottom = 0 then
-            Reader.Top       := Top;
-            Reader.Bottom    := Bot;
+            Reader.Top := Top;
+            Reader.Bottom := Bot;
             Reader.Timestamp := TS;
             return Gap;
          else
@@ -180,9 +186,12 @@ package body Reader is
    procedure Trace (Reader : in out Reader_Type) is
    begin
       Log.Msg
-        ("[Reader] bottom:" & Natural'Image (Reader.Bottom) & " top:" &
-         Natural'Image (Reader.Top) & " timestamp:" &
-         Time_Type'Image (Reader.Timestamp));
+        ("[Reader] bottom:"
+         & Natural'Image (Reader.Bottom)
+         & " top:"
+         & Natural'Image (Reader.Top)
+         & " timestamp:"
+         & Time_Type'Image (Reader.Timestamp));
    end Trace;
 
 end Reader;

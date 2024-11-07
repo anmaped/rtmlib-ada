@@ -23,110 +23,108 @@ with Log;
 
 package body Event is
 
-    -- Constructor without parameters
-    function Create return Event_Type is
-    begin
-        return (Data => <>, Time => <>);
-    end Create;
+   -- Constructor without parameters
+   function Create return Event_Type is
+   begin
+      return (Data => <>, Time => <>);
+   end Create;
 
-    -- Constructor with data
-    function Create
-       (Data : in Data_Type) return Event_Type
-    is
-    begin
-        return (Data => Data, Time => <>);
-    end Create;
+   -- Constructor with data
+   function Create (Data : in Data_Type) return Event_Type is
+   begin
+      return (Data => Data, Time => <>);
+   end Create;
 
-    -- Constructor with data and time
-    function Create
-       (Data : in Data_Type; Time : in Time_Type) return Event_Type
-    is
-    begin
-        return (Data => Data, Time => Time);
-    end Create;
+   -- Constructor with data and time
+   function Create (Data : in Data_Type; Time : in Time_Type) return Event_Type
+   is
+   begin
+      return (Data => Data, Time => Time);
+   end Create;
 
-    -- Getters
-    function Get_Data (Self : in Event_Type) return Data_Type is
-    begin
-        return Self.Data;
-    end Get_Data;
+   -- Getters
+   function Get_Data (Self : in Event_Type) return Data_Type is
+   begin
+      return Self.Data;
+   end Get_Data;
 
-    function Get_Time (Self : in Event_Type) return Time_Type is
-    begin
-        return Self.Time;
-    end Get_Time;
+   function Get_Time (Self : in Event_Type) return Time_Type is
+   begin
+      return Self.Time;
+   end Get_Time;
 
-    -- Setters
-    procedure Set_Data (Self : in out Event_Type; Data : in Data_Type) is
-    begin
-        Self.Data := Data;
-    end Set_Data;
+   -- Setters
+   procedure Set_Data (Self : in out Event_Type; Data : in Data_Type) is
+   begin
+      Self.Data := Data;
+   end Set_Data;
 
-    procedure Set_Time (Self : in out Event_Type; Time : in Time_Type) is
-    begin
-        Self.Time := Time;
-    end Set_Time;
+   procedure Set_Time (Self : in out Event_Type; Time : in Time_Type) is
+   begin
+      Self.Time := Time;
+   end Set_Time;
 
-    -- Trace function
-    procedure Trace (Self : in Event_Type) is
-    begin
-        Log.Msg
-           ("[Event] Data:" & Data_Type'Image (Self.Data) & ", Time:" &
-            Time_Type'Image (Self.Time) & "");
-    end Trace;
+   -- Trace function
+   procedure Trace (Self : in Event_Type) is
+   begin
+      Log.Msg
+        ("[Event] Data:"
+         & Data_Type'Image (Self.Data)
+         & ", Time:"
+         & Time_Type'Image (Self.Time)
+         & "");
+   end Trace;
 
-    -- Operator overloads
-    function "<" (Left, Right : Event_Type) return Boolean is
-    begin
-        return Left.Time < Right.Time;
-    end "<";
+   -- Operator overloads
+   function "<" (Left, Right : Event_Type) return Boolean is
+   begin
+      return Left.Time < Right.Time;
+   end "<";
 
-    function "<=" (Left, Right : Event_Type) return Boolean is
-    begin
-        return Left.Time <= Right.Time;
-    end "<=";
+   function "<=" (Left, Right : Event_Type) return Boolean is
+   begin
+      return Left.Time <= Right.Time;
+   end "<=";
 
-    function ">" (Left, Right : Event_Type) return Boolean is
-    begin
-        return Left.Time > Right.Time;
-    end ">";
+   function ">" (Left, Right : Event_Type) return Boolean is
+   begin
+      return Left.Time > Right.Time;
+   end ">";
 
-    function ">=" (Left, Right : Event_Type) return Boolean is
-    begin
-        return Left.Time >= Right.Time;
-    end ">=";
+   function ">=" (Left, Right : Event_Type) return Boolean is
+   begin
+      return Left.Time >= Right.Time;
+   end ">=";
 
-    function "=" (Left, Right : Event_Type) return Boolean is
-    begin
-        return Left.Time = Right.Time and then Left.Data = Right.Data;
-    end "=";
+   function "=" (Left, Right : Event_Type) return Boolean is
+   begin
+      return Left.Time = Right.Time and then Left.Data = Right.Data;
+   end "=";
 
-    -- Time comparison overloads
-    function "<" (Event_Time : Time_Type; Event : Event_Type) return Boolean is
-    begin
-        return Event_Time < Event.Time;
-    end "<";
+   -- Time comparison overloads
+   function "<" (Event_Time : Time_Type; Event : Event_Type) return Boolean is
+   begin
+      return Event_Time < Event.Time;
+   end "<";
 
-    function "<=" (Event_Time : Time_Type; Event : Event_Type) return Boolean
-    is
-    begin
-        return Event_Time <= Event.Time;
-    end "<=";
+   function "<=" (Event_Time : Time_Type; Event : Event_Type) return Boolean is
+   begin
+      return Event_Time <= Event.Time;
+   end "<=";
 
-    function ">" (Event_Time : Time_Type; Event : Event_Type) return Boolean is
-    begin
-        return Event_Time > Event.Time;
-    end ">";
+   function ">" (Event_Time : Time_Type; Event : Event_Type) return Boolean is
+   begin
+      return Event_Time > Event.Time;
+   end ">";
 
-    function ">=" (Event_Time : Time_Type; Event : Event_Type) return Boolean
-    is
-    begin
-        return Event_Time >= Event.Time;
-    end ">=";
+   function ">=" (Event_Time : Time_Type; Event : Event_Type) return Boolean is
+   begin
+      return Event_Time >= Event.Time;
+   end ">=";
 
-    function "=" (Event_Time : Time_Type; Event : Event_Type) return Boolean is
-    begin
-        return Event_Time = Event.Time;
-    end "=";
+   function "=" (Event_Time : Time_Type; Event : Event_Type) return Boolean is
+   begin
+      return Event_Time = Event.Time;
+   end "=";
 
 end Event;
