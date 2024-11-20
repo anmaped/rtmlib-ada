@@ -72,8 +72,8 @@ package Reader.Rmtld3 is
      (Reader : in out RMTLD3_Reader_Type; Event : out Event_Type)
       return Error_Type;
 
-   --  Current buffer length of the reader
-   --function Length return Size_Type;
+   -- Get reader length
+   function Length (Reader : RMTLD3_Reader_Type) return B.Index_Type;
 
    --  Number of reader's consumed elements from the buffer
    function Consumed (Reader : in out RMTLD3_Reader_Type) return Natural;

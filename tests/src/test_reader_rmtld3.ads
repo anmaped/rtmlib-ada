@@ -5,15 +5,19 @@ with Event;
 with Buffer;
 with Reader;
 with Reader.Rmtld3;
-with Rmtld3;
 
-package Test_Rmtld3 is
+package Test_Reader_Rmtld3 is
 
    type Duration is delta 10.0 ** (-9) range 0.0 .. 2.0 ** (+32);
 
    --  event instantiation for natural numbers
    package Nat_Event is new
      Event (Data_Type => Natural, Time_Type => Duration);
+
+   --  example of event creation
+   x : Nat_Event.Event_Type := Nat_Event.Create;
+   y : Nat_Event.Event_Type :=
+     Nat_Event.Create (Data => 10, Time => Duration (1.0));
 
    --  package instantiation as a buffer of natural numbers
    package Nat_Buffer is new Buffer (E => Nat_Event, N => 100);
@@ -34,21 +38,16 @@ package Test_Rmtld3 is
    trace : Nat_Reader_RMTLD3.RMTLD3_Reader_Type :=
      Nat_Reader_RMTLD3.Create (buf'Access);
 
-   --  package instantiation as a rmtld3 library for natural numbers
-   package Nat_rmtld3 is new Rmtld3 (R => Nat_Reader, RR => Nat_Reader_RMTLD3);
-
-   type Test_Rmtld3 is new Test_Cases.Test_Case with null record;
+   type Test_Reader_Rmtld3 is new Test_Cases.Test_Case with null record;
 
    --  Register routines to be run
-   procedure Register_Tests (T : in out Test_Rmtld3);
+   procedure Register_Tests (T : in out Test_Reader_Rmtld3);
 
    --  Provide name identifying the test case
-   function Name (T : Test_Rmtld3) return Message_String;
+   function Name (T : Test_Reader_Rmtld3) return Message_String;
 
    --  Test Routines:
-   procedure Test_Constructions (T : in out Test_Cases.Test_Case'Class);
-   procedure Test_Proposition (T : in out Test_Cases.Test_Case'Class);
-   procedure Test_Or (T : in out Test_Cases.Test_Case'Class);
+   procedure Test_Pull (T : in out Test_Cases.Test_Case'Class);
 
 
-end Test_Rmtld3;
+end Test_Reader_Rmtld3;

@@ -17,6 +17,8 @@
 --  You should have received a copy of the GNU General Public License
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+with Log;
+
 package body Rmtld3 is
 
    use R.B.E;
@@ -102,15 +104,28 @@ package body Rmtld3 is
    begin
       Status := Read (Trace, E);
 
+      Log.Msg ("Status: " & Error_Type'Image (Status));
+      Log.Msg
+        ("Status Read_Next : " & Error_Type'Image (Read_Next (Trace, E_Next)));
+
       if Status = Available
         and then Read_Next (Trace, E_Next) = Available
         and then Get_Time (E) <= Time
         and then Time < Get_Time (E_Next)
       then
 
-         --  Debug_V_RMTLD3
-         --  (Time, Proposition, Get_Data (E), Get_Time (E), Get_Data (E_Next),
-         --   Get_Time (E_Next));
+         Log.Msg
+           ("[Prop "
+            & Data_Type'Image (Data_Type (Proposition))
+            & "] Data: "
+            & Data_Type'Image (Get_Data (E))
+            & " Time: "
+            & Time_Type'Image (Get_Time (E))
+            & " Next Data: "
+            & Data_Type'Image (Get_Data (E_Next))
+            & " Time: "
+            & Time_Type'Image (Get_Time (E_Next)));
+
          if Get_Data (E) = Data_Type (Proposition) then
             return True;
          else
@@ -118,7 +133,14 @@ package body Rmtld3 is
          end if;
 
       else
-         --  Debug_V_RMTLD3 (Time, Proposition, Get_Data (E), Get_Time (E));
+         Log.Msg
+           ("[Prop"
+            & Data_Type'Image (Data_Type (Proposition))
+            & "] Data: "
+            & Data_Type'Image (Get_Data (E))
+            & " Time: "
+            & Time_Type'Image (Get_Time (E)));
+
          return Unknown;
       end if;
 

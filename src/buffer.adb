@@ -101,9 +101,19 @@ package body Buffer is
    is
       C : Boolean := Length (Buffer) > 0;
    begin
+      Log.Msg
+        ("[Buffer.Pull] length:"
+         & Natural'Image (Length (Buffer))
+         & ", bottom:"
+         & Natural'Image (Buffer.Bottom)
+         & ", top:"
+         & Natural'Image (Buffer.Top)
+         & ", not empty:"
+         & Boolean'Image (C));
+
       if C then
          Node := Buffer.Arr (Buffer.Bottom);
-         Buffer.Bottom := (Buffer.Bottom + 1) mod N;
+         Increment_Bottom (Buffer);
          return (if Buffer.Writer > 1 then UNSAFE else OK);
       else
          return EMPTY;
@@ -114,12 +124,20 @@ package body Buffer is
      (Buffer : in out Buffer_Type; Node : out E.Event_Type) return Error_Type
    is
       C : Boolean := Length (Buffer) > 0;
-      T : Index_Type;
    begin
+      Log.Msg
+        ("[Buffer.Pop] length:"
+         & Natural'Image (Length (Buffer))
+         & ", bottom:"
+         & Natural'Image (Buffer.Bottom)
+         & ", top:"
+         & Natural'Image (Buffer.Top)
+         & ", not empty:"
+         & Boolean'Image (C));
+
       if C then
-         T := (Buffer.Top + N - 1) mod N; -- Decrement top
-         Buffer.Top := T;
-         Node := Buffer.Arr (T);
+         Decrement_Top (Buffer);
+         Node := Buffer.Arr (Buffer.Top);
          return (if Buffer.Writer > 1 then UNSAFE else OK);
       else
          return EMPTY;

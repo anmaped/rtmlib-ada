@@ -119,13 +119,10 @@ package body Reader.Rmtld3 is
 
    function Read_Next
      (Reader : in out RMTLD3_Reader_Type; Event : out Event_Type)
-      return Error_Type
-   is
-      Cursor : Natural :=
-        Reader.Top; -- Assuming Cursor is initialized to Top of Record_Type
+      return Error_Type is
    begin
       if Length (Reader) > 1
-        and then Cursor /= Reader.Top
+        and then Reader.Cursor /= Reader.Top
         and then (B.Read
                     (Reader.Buffer.all,
                      (if Reader.Cursor + 1 >= B.N then 0
@@ -165,6 +162,13 @@ package body Reader.Rmtld3 is
          return Unavailable;
       end if;
    end Read_Previous;
+
+   function Length (Reader : RMTLD3_Reader_Type) return Index_Type is
+   begin
+      return
+        (if Reader.Top >= Reader.cursor then Reader.Top - Reader.cursor
+         else N - (Reader.cursor - Reader.Top));
+   end Length;
 
    function Consumed (Reader : in out RMTLD3_Reader_Type) return Natural is
    begin
