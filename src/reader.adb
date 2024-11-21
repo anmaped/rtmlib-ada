@@ -186,7 +186,7 @@ package body Reader is
    procedure Trace (Reader : in out Reader_Type) is
    begin
       Log.Msg
-        ("[Reader] bottom:"
+        ("[Reader.Trace] bottom:"
          & Natural'Image (Reader.Bottom)
          & " top:"
          & Natural'Image (Reader.Top)

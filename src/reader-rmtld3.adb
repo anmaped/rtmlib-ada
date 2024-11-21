@@ -49,40 +49,72 @@ package body Reader.Rmtld3 is
       while Read_Previous (Reader, E) = Available
         and Read (Reader, EE) = Available
       loop
-         Log.Msg ("--- " & Get_Time (E)'Image & Get_Time (EE)'Image);
+         Log.Msg
+           ("[Reader.Rmtld3.Set] --- "
+            & Get_Time (E)'Image
+            & Get_Time (EE)'Image);
 
          if Get_Time (E) <= Time and Time < Get_Time (EE) then
             return Available;
          end if;
 
          err := Decrement_Cursor (Reader);
-         Log.Msg ("backward cursor=" & Reader.Cursor'Image);
+         Log.Msg
+           ("[Reader.Rmtld3.Set] backward cursor=" & Reader.Cursor'Image);
       end loop;
 
       while Read (Reader, EE) = Available and Read_Next (Reader, E) = Available
       loop
-         Log.Msg ("--- " & Get_Time (EE)'Image & Get_Time (E)'Image);
+         Log.Msg
+           ("[Reader.Rmtld3.Set] --- "
+            & Get_Time (EE)'Image
+            & Get_Time (E)'Image);
 
          if Get_Time (EE) <= Time and Time < Get_Time (E) then
             return Available;
          end if;
 
          err := Increment_Cursor (Reader);
-         Log.Msg ("forward cursor=" & Reader.Cursor'Image);
+         Log.Msg ("[Reader.Rmtld3.Set] forward cursor=" & Reader.Cursor'Image);
       end loop;
 
       return Unavailable;
    end Set;
 
+   function Set_Cursor
+     (Reader : in out RMTLD3_Reader_Type; Cursor : in Natural)
+      return Error_Type
+   is
+      Event : Event_Type;
+   begin
+
+      if B.Read (Reader.Buffer.all, Cursor, Event) = B.OK then
+         Reader.Cursor := Cursor;
+         return Available;
+      else
+         Log.Msg
+           ("[Reader.Rmtld3.Set_Cursor] cursor set "
+            & Cursor'Image
+            & " is not available");
+         return Unavailable;
+      end if;
+
+   end Set_Cursor;
+
+   function Get_Cursor (Reader : in out RMTLD3_Reader_Type) return Natural is
+   begin
+      return Reader.Cursor;
+   end Get_Cursor;
+
    function Increment_Cursor
      (Reader : in out RMTLD3_Reader_Type) return Error_Type is
    begin
-      -- check if current cursor is bounded between bot and top
+      --  check if current cursor is bounded between bot and top
       if Reader.Top = Reader.Cursor then
          return Unavailable;
       end if;
 
-      -- cursor = (size_t)(cursor + 1) % R::buffer.size;
+      --  cursor = (size_t)(cursor + 1) % R::buffer.size;
       Reader.Cursor := (Reader.Cursor + 1) mod B.N;
 
       return Available;
@@ -91,12 +123,12 @@ package body Reader.Rmtld3 is
    function Decrement_Cursor
      (Reader : in out RMTLD3_Reader_Type) return Error_Type is
    begin
-      -- check if current cursor is bounded between bot and top
+      --  check if current cursor is bounded between bot and top
       if Reader.Bottom = Reader.Cursor then
          return Unavailable;
       end if;
 
-      -- cursor = (size_t)(cursor - 1) % R::buffer.size;
+      --  cursor = (size_t)(cursor - 1) % R::buffer.size;
       if Reader.Cursor = 0 then
          Reader.Cursor := B.N - 1;
       else
@@ -105,6 +137,36 @@ package body Reader.Rmtld3 is
 
       return Available;
    end Decrement_Cursor;
+
+   function Pull
+     (Reader : in out RMTLD3_Reader_Type; Event : out Event_Type)
+      return Error_Type is
+
+   begin
+
+      if Length (Reader) > 0 then
+         if B.Read (Reader.Buffer.all, Reader.Cursor, Event) /= B.OK then
+            return Read_Error;
+         end if;
+
+         if Increment_Cursor (Reader) = Unavailable then
+            return Reader_Overflow;
+         end if;
+      end if;
+
+      Log.Msg
+        ("[Reader.Rmtld3.Pull] "
+         & Length (Reader)'Image
+         & " ("
+         & Reader.Cursor'Image
+         & ","
+         & Reader.Top'Image
+         & ")");
+
+      return (if Length (Reader) > 0 then Available else Unavailable);
+
+
+   end Pull;
 
    function Read
      (Reader : in out RMTLD3_Reader_Type; Event : out Event_Type)
@@ -141,7 +203,7 @@ package body Reader.Rmtld3 is
       return Error_Type is
    begin
       Log.Msg
-        ("consumed="
+        ("[Reader.Rmtld3.Read_Previous] consumed="
          & Consumed (Reader)'Image
          & " available="
          & Length (Reader)'Image
@@ -166,8 +228,8 @@ package body Reader.Rmtld3 is
    function Length (Reader : RMTLD3_Reader_Type) return Index_Type is
    begin
       return
-        (if Reader.Top >= Reader.cursor then Reader.Top - Reader.cursor
-         else N - (Reader.cursor - Reader.Top));
+        (if Reader.Top >= Reader.Cursor then Reader.Top - Reader.Cursor
+         else N - (Reader.Cursor - Reader.Top));
    end Length;
 
    function Consumed (Reader : in out RMTLD3_Reader_Type) return Natural is

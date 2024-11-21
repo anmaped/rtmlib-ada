@@ -137,7 +137,7 @@ package body Test_Buffer is
       Register_Routine
         (T, Test_Push_and_Pop'Access, "Test Buffer Push and Pop");
       Register_Routine
-        (T, Test_Push_and_Pull'Access, "Test Buffer Push and Pop");
+        (T, Test_Push_and_Pull'Access, "Test Buffer Push and Pull");
    end Register_Tests;
 
    --  Identifier of test case

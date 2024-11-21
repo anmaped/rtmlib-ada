@@ -4,6 +4,8 @@ with rtm_compute_1daa_0;
 with rtm_compute_1daa_1;
 with Unit;
 
+with Log;
+
 package body Test_Rmtld3 is
 
    use Nat_rmtld3;
@@ -130,13 +132,56 @@ package body Test_Rmtld3 is
 
    end Test_Or;
 
+   procedure Test_Duration (T : in out Test_Cases.Test_Case'Class) is
+      pragma Unreferenced (T);
+
+      function Prop_1 is new Nat_rmtld3.Prop (Proposition => 2);
+      function Tm_1 is new Nat_rmtld3.Cons (Value => 11.0);
+      function Integral_Tm_1_Prop_1 is new
+        Nat_rmtld3.Integral (tm => Tm_1, fm => Prop_1);
+
+      use Nat_Buffer;
+      use Nat_Reader;
+      ev : Nat_Event.Event_Type;
+
+      procedure to_test is new Unit.Test (Nat_Buffer => Nat_Buffer);
+
+      value : Duration_Record;
+
+   begin
+      --  reset the buffer
+      loop
+         exit when Pop (buf, ev) = EMPTY;
+      end loop;
+
+      --  fill the buffer with events
+      to_test (buf'Access);
+
+      --  print the buffer content
+      Nat_Buffer.Trace (buf);
+
+      trace := Nat_Reader_RMTLD3.Create (buf'Access);
+
+      Assert
+        (Nat_Reader_RMTLD3.Synchronize (trace) = Gap,
+         "Should be Gap"); --  [TODO] this should be no gap
+
+      value := Integral_Tm_1_Prop_1 (trace, Duration (0));
+      Log.Msg ("[Test_Rmtld3.Test_Duration] " & printDuration (value));
+
+      Assert (value = mk_duration (2.0), "Should be 2.0");
+
+   end Test_Duration;
+
    --  Register test routines to call
    procedure Register_Tests (T : in out Test_Rmtld3) is
       use AUnit.Test_Cases.Registration;
    begin
-      Register_Routine (T, Test_Constructions'Access, "Test Or");
+      Register_Routine
+        (T, Test_Constructions'Access, "Test rmtld3 priimitives");
       Register_Routine (T, Test_Proposition'Access, "Test Proposition");
-      Register_Routine (T, Test_Or'Access, "Test Or");
+      Register_Routine (T, Test_Or'Access, "Test Or Formula");
+      Register_Routine (T, Test_Duration'Access, "Test Duration Term");
 
    end Register_Tests;
 

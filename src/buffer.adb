@@ -78,7 +78,7 @@ package body Buffer is
       end if;
 
       Log.Msg
-        ("[Reader.Push] length:"
+        ("[Buffer.Push] length:"
          & Natural'Image (Length (Buffer))
          & " b:"
          & Natural'Image (B)
@@ -192,7 +192,7 @@ package body Buffer is
 
       -- Debug output. Replace with your actual logging or debug mechanism.
       Log.Msg
-        ("[Read.State] b:"
+        ("[Buffer.State] b:"
          & Index_Type'Image (B)
          & " t:"
          & Index_Type'Image (T)
@@ -222,7 +222,7 @@ package body Buffer is
       State (Buffer, B, T, TS, TS_T);
 
       Log.Msg
-        ("[Buffer] b:"
+        ("[Buffer.Trace] b:"
          & Index_Type'Image (B)
          & " t:"
          & Index_Type'Image (T)
@@ -232,13 +232,13 @@ package body Buffer is
          & E.Time_Type'Image (TS_T)
          & ")");
 
-      Log.Msg ("[Buffer] ...");
+      Log.Msg ("[Buffer.Trace] ...");
 
       for Idx in 0 .. N loop
          E.Trace (Buffer.Arr (Idx));
       end loop;
 
-      Log.Msg ("[Buffer] .");
+      Log.Msg ("[Buffer.Trace] .");
    end Trace;
 
    procedure Increment_Writer (Buffer : in out Buffer_Type) is

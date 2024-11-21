@@ -29,7 +29,7 @@ is
 
    type Duration_Type is (DSome, DNone);
 
-   type Duration_Record (Option : Duration_Type) is record
+   type Duration_Record (Option : Duration_Type := DNone) is record
       case Option is
          when DSome =>
             Value : Float;  -- Holds integer value
@@ -39,13 +39,33 @@ is
       end case;
    end record;
 
-   function mk_duration (x : Float) return Duration_Record;
+   type Three_Valued_Type is (True, False, Unknown);
 
+   function mk_duration (x : Float) return Duration_Record;
+   function mk_unknown_duration return Duration_Record;
+   function sum_duration
+     (d1 : in Duration_Record; d2 : in Duration_Record) return Duration_Record;
+   function multiply_duration
+     (d1 : in Duration_Record; d2 : in Duration_Record) return Duration_Record;
+   function printDuration (x : Duration_Record) return String;
    function isDuration (x : Duration_Record) return Boolean;
 
    generic
       Value : in  Float;
    function Cons
+     (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
+      return Duration_Record;
+
+   generic
+      with
+        function tm
+          (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
+           return Duration_Record is <>;
+      with
+        function fm
+          (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
+           return Three_Valued_Type is <>;
+   function Integral
      (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
       return Duration_Record;
 
@@ -74,8 +94,6 @@ is
    function Times
      (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
       return Duration_Record;
-
-   type Three_Valued_Type is (True, False, Unknown);
 
    function mk_true
      (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)

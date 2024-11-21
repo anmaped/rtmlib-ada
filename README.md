@@ -55,15 +55,21 @@ make
 
 The expected output might be similar to
 ```
-$ ./test_rtmlib 
-OK Test_Rmtld3 : Test IsDuration
+$ ./test_rtmlib
+[...]
 
-Total Tests Run:   1
-Successful Tests:  1
+OK Test_Buffer : Test Buffer Push and Pop
+OK Test_Buffer : Test Buffer Push and Pull
+OK Test_Reader_Rmtld3 : Test Reader Rmtld3 Pull
+OK Test_Rmtld3 : Test rmtld3 priimitives
+OK Test_Rmtld3 : Test Proposition
+OK Test_Rmtld3 : Test Or Formula
+OK Test_Rmtld3 : Test Duration Term
+
+Total Tests Run:   7
+Successful Tests:  7
 Failed Assertions: 0
 Unexpected Errors: 0
-
-[...]
 $
 ```
 

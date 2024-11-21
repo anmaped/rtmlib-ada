@@ -17,8 +17,6 @@
 --  You should have received a copy of the GNU General Public License
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-with Reader;
-
 generic
 package Reader.Rmtld3 is
 
@@ -26,36 +24,40 @@ package Reader.Rmtld3 is
 
    type RMTLD3_Reader_Type is new Reader_Type with private;
 
-   -- Constructors
+   --  Constructors
    overriding
    function Create (Buf : Buffer_Access_Type) return RMTLD3_Reader_Type;
 
    function Create (Reader : Reader_Type) return RMTLD3_Reader_Type;
 
-   -- Resets cursor in the reader
+   --  Resets cursor in the reader
    function Reset (Reader : in out RMTLD3_Reader_Type) return Error_Type;
 
-   -- Sets cursor at time t
+   --  Sets cursor at time t
    function Set
      (Reader : in out RMTLD3_Reader_Type; Time : in Time_Type)
       return Error_Type;
 
-   -- Sets cursor
-   --function Set_Cursor(Cursor_In : in out Natural) return Error_Type;
+   --  Sets cursor
+   function Set_Cursor
+     (Reader : in out RMTLD3_Reader_Type; Cursor : in Natural)
+      return Error_Type;
 
-   -- Gets cursor
-   --function Get_Cursor return Natural;
+   --  Gets cursor
+   function Get_Cursor (Reader : in out RMTLD3_Reader_Type) return Natural;
 
-   -- Increment current cursor
+   --  Increment current cursor
    function Increment_Cursor
      (Reader : in out RMTLD3_Reader_Type) return Error_Type;
 
-   -- Decrement current cursor
+   --  Decrement current cursor
    function Decrement_Cursor
      (Reader : in out RMTLD3_Reader_Type) return Error_Type;
 
    --  Pull event
-   --function Pull (Event : out Event_Type) return Error_Type;
+   function Pull
+     (Reader : in out RMTLD3_Reader_Type; Event : out Event_Type)
+      return Error_Type;
 
    --  read event without removing it from the buffer
    function Read
@@ -72,18 +74,18 @@ package Reader.Rmtld3 is
      (Reader : in out RMTLD3_Reader_Type; Event : out Event_Type)
       return Error_Type;
 
-   -- Get reader length
+   --  Get reader length
    function Length (Reader : RMTLD3_Reader_Type) return B.Index_Type;
 
    --  Number of reader's consumed elements from the buffer
    function Consumed (Reader : in out RMTLD3_Reader_Type) return Natural;
 
    --  Enable debug message for reader
-   --procedure Debug;
+   --  procedure Debug;
 private
 
    type RMTLD3_Reader_Type is new Reader_Type with record
-      -- Cursor between bottom and top of the reader
+      --  Cursor between bottom and top of the reader
       Cursor : Natural := 0;
    end record;
 

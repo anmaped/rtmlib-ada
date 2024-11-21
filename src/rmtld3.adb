@@ -25,12 +25,44 @@ package body Rmtld3 is
    use RR;
    use R;
 
-   function mk_duration (x : Float) return Duration_Record is
+   function mk_duration (x : in Float) return Duration_Record is
       y : Duration_Record (DSome);
    begin
       y.Value := x;
       return y;
    end mk_duration;
+
+   function mk_unknown_duration return Duration_Record is
+      y : Duration_Record (DNone);
+   begin
+      return y;
+   end mk_unknown_duration;
+
+   function sum_duration
+     (d1 : in Duration_Record; d2 : in Duration_Record) return Duration_Record
+   is
+      y : Duration_Record := d1;
+   begin
+      if isDuration (d1) and isDuration (d2) then
+         y.Value := d1.Value + d2.Value;
+         return y;
+      else
+         return mk_unknown_duration;
+      end if;
+   end sum_duration;
+
+   function multiply_duration
+     (d1 : in Duration_Record; d2 : in Duration_Record) return Duration_Record
+   is
+      y : Duration_Record := d1;
+   begin
+      if isDuration (d1) and isDuration (d2) then
+         y.Value := d1.Value * d2.Value;
+         return y;
+      else
+         return mk_unknown_duration;
+      end if;
+   end multiply_duration;
 
    function isDuration (x : Duration_Record) return Boolean is
    begin
@@ -41,6 +73,15 @@ package body Rmtld3 is
       end if;
    end isDuration;
 
+   function printDuration (x : Duration_Record) return String is
+   begin
+      if isDuration (x) then
+         return Float'Image (x.Value);
+      else
+         return "unknown";
+      end if;
+   end printDuration;
+
    function Cons
      (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
       return Duration_Record
@@ -50,6 +91,138 @@ package body Rmtld3 is
    begin
       return x;
    end Cons;
+
+   function Integral
+     (Trace : in out RMTLD3_Reader_Type; Time : in Time_Type)
+      return Duration_Record
+   is
+
+      function Indicator_Function
+        (Trace : in out RMTLD3_Reader_Type; Time : Time_Type)
+         return Duration_Record;
+
+      function Indicator_Function
+        (Trace : in out RMTLD3_Reader_Type; Time : Time_Type)
+         return Duration_Record
+      is
+         C       : Integer := Get_Cursor (Trace);
+         Formula : Three_Valued_Type := fm (Trace, Time);
+      begin
+         --  reset the cursor changes during the evaluation of the subformula
+         if Set_Cursor (Trace, C) /= Available then
+            raise Program_Error with "Cursor setting failed";
+         end if;
+
+         if Formula = True then
+            return mk_duration (1.0);
+         elsif Formula = False then
+            return mk_duration (0.0);
+         else
+            return mk_unknown_duration;
+         end if;
+      end Indicator_Function;
+
+      C_Duration : Integer := Get_Cursor (Trace);
+
+      T_Upper     : Duration_Record := tm (Trace, Time);
+      Event       : Event_Type;
+      Acc         : Duration_Record := mk_duration (0.0);
+      C_Time_Prev : Time_Type;
+      C_Time      : Time_Type;
+      Symbol      : Duration_Record;
+
+   begin
+
+      if not isDuration (T_Upper) then
+         return mk_unknown_duration;
+      end if;
+
+      --  Initialization of C_Time_Prev
+      if Read (Trace, Event) /= Available then
+         return mk_unknown_duration;
+      end if;
+      C_Time_Prev := Get_Time (Event);
+      Symbol := Indicator_Function (Trace, C_Time_Prev);
+
+      loop
+         exit when Pull (Trace, Event) /= Available;
+
+         C_Time_Prev := Get_Time (Event);
+
+         if Read (Trace, Event) /= Available then
+            return mk_unknown_duration;
+         end if;
+
+         C_Time := Get_Time (Event);
+
+         Log.Msg
+           ("[Rmtld3.Integral] C_Time_Prev: "
+            & C_Time_Prev'Image
+            & " Time: "
+            & Time'Image
+            & " C_Time: "
+            & C_Time'Image);
+
+         --  Find lower condition
+         if C_Time_Prev <= Time and then Time < C_Time then
+            Acc :=
+              multiply_duration (mk_duration (Float (C_Time - Time)), Symbol);
+            Log.Msg ("[Rmtld3.Integral] Lower bound met");
+            --  Find upper condition
+         elsif C_Time_Prev <= Time + Time_Type (T_Upper.Value)
+           and then Time + Time_Type (T_Upper.Value) < C_Time
+         then
+            Acc :=
+              sum_duration
+                (Acc,
+                 multiply_duration
+                   (mk_duration
+                      (Float (Time + Time_Type (T_Upper.Value) - C_Time_Prev)),
+                    Symbol));
+            Log.Msg ("[Rmtld3.Integral] Upper bound met");
+            Log.Msg
+              ("[Rmtld3.Integral] Accumulated Duration: "
+               & printDuration (Acc)
+               & ", Interval Duration (Time + Time_Type (T_Upper.Value) - C_Time_Prev): "
+               & printDuration
+                   (mk_duration
+                      (Float (Time + Time_Type (T_Upper.Value) - C_Time_Prev)))
+               & ", Symbol Duration: "
+               & printDuration (Symbol));
+
+            exit;
+            --  In between
+         else
+            Acc :=
+              sum_duration
+                (Acc,
+                 multiply_duration
+                   (mk_duration (Float (C_Time - C_Time_Prev)), Symbol));
+         end if;
+
+         Symbol := Indicator_Function (Trace, C_Time);
+         Log.Msg
+           ("[Rmtld3.Integral] Accumulated Duration: "
+            & printDuration (Acc)
+            & ", Interval Duration (C_Time - C_Time_Prev): "
+            & printDuration (mk_duration (Float (C_Time - C_Time_Prev)))
+            & ", Symbol Duration: "
+            & printDuration (Symbol));
+      end loop;
+
+      --  We may have more symbols to see (no conclusion)
+      if Get_Time (Event) <= Time + Time_Type (T_Upper.Value) then
+         Acc := mk_unknown_duration;
+      end if;
+
+      --  reset the cursor changes during the evaluation of the subformula
+      if Set_Cursor (Trace, C_Duration) /= Available then
+         raise Program_Error with "[Rmtld3.Integral] Cursor setting failed";
+      end if;
+
+      return Acc;
+
+   end Integral;
 
    function Sum
      (Trace : in out RMTLD3_Reader_Type; Time : in Time_Type)
@@ -104,9 +277,10 @@ package body Rmtld3 is
    begin
       Status := Read (Trace, E);
 
-      Log.Msg ("Status: " & Error_Type'Image (Status));
+      Log.Msg ("[Rmtld3.Prop] Status: " & Error_Type'Image (Status));
       Log.Msg
-        ("Status Read_Next : " & Error_Type'Image (Read_Next (Trace, E_Next)));
+        ("[Rmtld3.Prop] Status Read_Next : "
+         & Error_Type'Image (Read_Next (Trace, E_Next)));
 
       if Status = Available
         and then Read_Next (Trace, E_Next) = Available
@@ -115,15 +289,15 @@ package body Rmtld3 is
       then
 
          Log.Msg
-           ("[Prop "
+           ("[Rmtld3.Prop] Proposition: "
             & Data_Type'Image (Data_Type (Proposition))
-            & "] Data: "
+            & " Data: "
             & Data_Type'Image (Get_Data (E))
             & " Time: "
             & Time_Type'Image (Get_Time (E))
             & " Next Data: "
             & Data_Type'Image (Get_Data (E_Next))
-            & " Time: "
+            & " Next Time: "
             & Time_Type'Image (Get_Time (E_Next)));
 
          if Get_Data (E) = Data_Type (Proposition) then
@@ -134,9 +308,9 @@ package body Rmtld3 is
 
       else
          Log.Msg
-           ("[Prop"
+           ("[Rmtld3.Prop] Proposition: "
             & Data_Type'Image (Data_Type (Proposition))
-            & "] Data: "
+            & " Data: "
             & Data_Type'Image (Get_Data (E))
             & " Time: "
             & Time_Type'Image (Get_Time (E)));

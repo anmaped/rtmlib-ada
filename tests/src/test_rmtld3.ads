@@ -49,6 +49,7 @@ package Test_Rmtld3 is
    procedure Test_Constructions (T : in out Test_Cases.Test_Case'Class);
    procedure Test_Proposition (T : in out Test_Cases.Test_Case'Class);
    procedure Test_Or (T : in out Test_Cases.Test_Case'Class);
+   procedure Test_Duration (T : in out Test_Cases.Test_Case'Class);
 
 
 end Test_Rmtld3;
