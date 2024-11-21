@@ -1,6 +1,6 @@
 # rtmlib-ada
 
-[![Build Status](https://github.com/anmaped/rtmlib-ada/actions/workflows/build.yml/badge.svg)
+![Build Status](https://github.com/anmaped/rtmlib-ada/actions/workflows/build.yml/badge.svg)
 
 
 ## Description
@@ -25,7 +25,7 @@ rtmlib-ada has a direct link to the rmtld3synth tool as a monitor integration la
 
 ## Context
 
-The RunTime embedded Monitoring Library (rtmlib) was originally developed for runtime monitoring of real-time embedded systems on ARM and X86 platforms [1], but without emphasis on safety-critical systems. Now also supports RISC-V. This library is used to implement different monitoring architectures such as the ones proposed in [2] and [3]. Other efficient architectures can be deployed based on lock-free push, pull, and pop primitives over infinite trace sequences containing time-stamped events. The synchronization primitives for push, pull, and pop operations allow different readers and writers to progress asynchronously over the instantiated circular buffers and to synchronize when required.
+The RunTime embedded Monitoring Library (rtmlib) was originally developed for runtime monitoring of real-time embedded systems on ARM and X86 platforms [1] (current version also supports RISC-V), but without emphasis on safety-critical systems. This library is used to implement various monitoring architectures, such as those proposed in [2] and [3]. Other efficient architectures can be deployed based on lock-free push, pull, and pop primitives over infinite trace sequences containing time-stamped events. The synchronization primitives for push, pull, and pop operations allow different readers and writers to proceed asynchronously over the instantiated circular buffers and to synchronize on demand.
 
 
 ## How to use rtmlib-ada ?
