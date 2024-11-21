@@ -18,7 +18,7 @@ jobs:
     - name: Set up GNAT toolchain
       run: >
         sudo apt-get update &&
-        sudo apt-get install gnat gprbuild
+        sudo apt-get install gnat gprbuild libaunit22-dev -y
 
     - name: Build
       run: gprbuild -p -P./tests/rtmlib_tests
