@@ -22,24 +22,24 @@ with Log;
 package body Buffer is
 
    procedure Increment_Top (Buffer : in out Buffer_Type) is
-      T : Natural := Buffer.Top; -- [TODO: atomic]
+      T : Natural := Buffer.Top; --  [TODO: atomic]
    begin
       T := T + 1;
       if T >= N then
          T := 0;
       end if;
-      Buffer.Top := T; -- [TODO: atomic]
+      Buffer.Top := T; --  [TODO: atomic]
    end Increment_Top;
 
    procedure Decrement_Top (Buffer : in out Buffer_Type) is
-      T : Natural := Buffer.Top; -- [TODO: atomic]
+      T : Natural := Buffer.Top; --  [TODO: atomic]
    begin
       if T = 0 then
          T := N - 1;
       else
          T := T - 1;
       end if;
-      Buffer.Top := T; -- [TODO: atomic]
+      Buffer.Top := T; --  [TODO: atomic]
    end Decrement_Top;
 
    procedure Increment_Bottom (Buffer : in out Buffer_Type) is
@@ -49,7 +49,7 @@ package body Buffer is
       if B >= N then
          B := 0;
       end if;
-      Buffer.Bottom := B; -- [TODO: atomic]
+      Buffer.Bottom := B; --  [TODO: atomic]
    end Increment_Bottom;
 
    function Create return Buffer_Type is
@@ -67,13 +67,13 @@ package body Buffer is
 
       Increment_Top (Buffer);
 
-      T := Buffer.Top; -- Update T after increment
-      B := Buffer.Bottom; -- Ensure B is current
+      T := Buffer.Top; --  Update T after increment
+      B := Buffer.Bottom; --  Ensure B is current
 
-      -- Check if the buffer is full
+      --  Check if the buffer is full
       if T = B then
-         -- Discard one element; the buffer is now moving forward and
-         -- replacing the last elements (it may originate a gap)
+         --  Discard one element; the buffer is now moving forward and
+         --  replacing the last elements (it may originate a gap)
          Increment_Bottom (Buffer);
       end if;
 
@@ -190,7 +190,7 @@ package body Buffer is
       TS := E.Get_Time (Buffer.Arr (B));
       TS_T := E.Get_Time (Buffer.Arr (T));
 
-      -- Debug output. Replace with your actual logging or debug mechanism.
+      --  Debug output. Replace with your actual logging or debug mechanism.
       Log.Msg
         ("[Buffer.State] b:"
          & Index_Type'Image (B)

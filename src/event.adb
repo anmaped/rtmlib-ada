@@ -23,26 +23,26 @@ with Log;
 
 package body Event is
 
-   -- Constructor without parameters
+   --  Constructor without parameters
    function Create return Event_Type is
    begin
       return (Data => <>, Time => <>);
    end Create;
 
-   -- Constructor with data
+   --  Constructor with data
    function Create (Data : in Data_Type) return Event_Type is
    begin
       return (Data => Data, Time => <>);
    end Create;
 
-   -- Constructor with data and time
+   --  Constructor with data and time
    function Create (Data : in Data_Type; Time : in Time_Type) return Event_Type
    is
    begin
       return (Data => Data, Time => Time);
    end Create;
 
-   -- Getters
+   --  Getters
    function Get_Data (Self : in Event_Type) return Data_Type is
    begin
       return Self.Data;
@@ -53,7 +53,7 @@ package body Event is
       return Self.Time;
    end Get_Time;
 
-   -- Setters
+   --  Setters
    procedure Set_Data (Self : in out Event_Type; Data : in Data_Type) is
    begin
       Self.Data := Data;
@@ -64,7 +64,7 @@ package body Event is
       Self.Time := Time;
    end Set_Time;
 
-   -- Trace function
+   --  Trace function
    procedure Trace (Self : in Event_Type) is
    begin
       Log.Msg
@@ -75,7 +75,7 @@ package body Event is
          & "");
    end Trace;
 
-   -- Operator overloads
+   --  Operator overloads
    function "<" (Left, Right : Event_Type) return Boolean is
    begin
       return Left.Time < Right.Time;
@@ -101,7 +101,7 @@ package body Event is
       return Left.Time = Right.Time and then Left.Data = Right.Data;
    end "=";
 
-   -- Time comparison overloads
+   --  Time comparison overloads
    function "<" (Event_Time : Time_Type; Event : Event_Type) return Boolean is
    begin
       return Event_Time < Event.Time;

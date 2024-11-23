@@ -49,12 +49,19 @@ is
      (d1 : in Duration_Record; d2 : in Duration_Record) return Duration_Record;
    function printDuration (x : Duration_Record) return String;
    function isDuration (x : Duration_Record) return Boolean;
+   pragma Inline (mk_duration);
+   pragma Inline (mk_unknown_duration);
+   pragma Inline (sum_duration);
+   pragma Inline (multiply_duration);
+   pragma Inline (printDuration);
+   pragma Inline (isDuration);
 
    generic
       Value : in  Float;
    function Cons
      (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
       return Duration_Record;
+   pragma Inline (Cons);
 
    generic
       with
@@ -68,6 +75,7 @@ is
    function Integral
      (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
       return Duration_Record;
+   pragma Inline (Integral);
 
    generic
       with
@@ -81,6 +89,7 @@ is
    function Sum
      (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
       return Duration_Record;
+   pragma Inline (Sum);
 
    generic
       with
@@ -94,16 +103,19 @@ is
    function Times
      (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
       return Duration_Record;
+   pragma Inline (Times);
 
    function mk_true
      (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
       return Three_Valued_Type;
+   pragma Inline (mk_true);
 
    generic
       Proposition : in  Natural;
    function Prop
      (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
       return Three_Valued_Type;
+   pragma Inline (Prop);
 
    generic
       with
@@ -113,6 +125,7 @@ is
    function Not3
      (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
       return Three_Valued_Type;
+   pragma Inline (Not3);
 
    generic
       with
@@ -126,6 +139,7 @@ is
    function Or3
      (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
       return Three_Valued_Type;
+   pragma Inline (Or3);
 
    generic
       with
@@ -139,6 +153,7 @@ is
    function Less3
      (Trace : in out RR.RMTLD3_Reader_Type; Time : in R.B.E.Time_Type)
       return Three_Valued_Type;
+   pragma Inline (Less3);
 
    generic
       with

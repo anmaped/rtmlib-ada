@@ -65,7 +65,7 @@ package body Reader is
             return Read_Error;
          end if;
 
-         -- Update local bottom
+         --  Update local bottom
          Reader.Bottom := Reader.Bottom + 1;
 
          Log.Msg

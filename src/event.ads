@@ -23,40 +23,47 @@ generic
 package Event is
    type Event_Type is private;
 
-   -- Constructor without parameters
+   --  Constructor without parameters
    function Create return Event_Type;
+   pragma Inline (Create);
 
-   -- Constructor with data
+   --  Constructor with data
    function Create (Data : in Data_Type) return Event_Type;
+   pragma Inline (Create);
 
-   -- Constructor with data and time
+   --  Constructor with data and time
    function Create
      (Data : in Data_Type; Time : in Time_Type) return Event_Type;
+   pragma Inline (Create);
 
-   -- Getters
+   --  Getters
    function Get_Data (Self : in Event_Type) return Data_Type;
    function Get_Time (Self : in Event_Type) return Time_Type;
+   pragma Inline (Get_Data, Get_Time);
 
-   -- Setters
+   --  Setters
    procedure Set_Data (Self : in out Event_Type; Data : in Data_Type);
    procedure Set_Time (Self : in out Event_Type; Time : in Time_Type);
+   pragma Inline (Set_Data, Set_Time);
 
-   -- Trace function
+   --  Trace function
    procedure Trace (Self : in Event_Type);
 
-   -- Operator overloads
+   --  Operator overloads
    function "<" (Left, Right : Event_Type) return Boolean;
    function "<=" (Left, Right : Event_Type) return Boolean;
    function ">" (Left, Right : Event_Type) return Boolean;
    function ">=" (Left, Right : Event_Type) return Boolean;
    function "=" (Left, Right : Event_Type) return Boolean;
+   pragma Inline ("<", "<=", ">", ">=", "=");
 
-   -- Time comparison overloads
+   --  Time comparison overloads
    function "<" (Event_Time : Time_Type; Event : Event_Type) return Boolean;
    function "<=" (Event_Time : Time_Type; Event : Event_Type) return Boolean;
    function ">" (Event_Time : Time_Type; Event : Event_Type) return Boolean;
    function ">=" (Event_Time : Time_Type; Event : Event_Type) return Boolean;
    function "=" (Event_Time : Time_Type; Event : Event_Type) return Boolean;
+   pragma Inline ("<", "<=", ">", ">=", "=");
 
 private
 

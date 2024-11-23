@@ -29,50 +29,50 @@ package Reader is
    type Error_Type is (Available, Unavailable, Reader_Overflow, Read_Error);
    type Gap_Error_Type is (No_Gap, Gap, Unknown_Gap);
 
-   -- Decrement top of the reader
+   --  Decrement top of the reader
    procedure Decrement_Reader_Top (Reader : in out Reader_Type);
 
-   -- Increment bottom of the reader
+   --  Increment bottom of the reader
    procedure Increment_Reader_Bottom (Reader : in out Reader_Type);
 
-   -- Decrement bottom of the reader
+   --  Decrement bottom of the reader
    procedure Decrement_Reader_Bottom (Reader : in out Reader_Type);
 
-   -- Constructs a new Reader.
+   --  Constructs a new Reader.
    function Create (Buf : Buffer_Access_Type) return Reader_Type;
 
-   -- Pull event from the buffer.
+   --  Pull event from the buffer.
    function Pull
      (Reader : in out Reader_Type; Event : out B.E.Event_Type)
       return Error_Type;
 
-   -- Pop event from the buffer.
+   --  Pop event from the buffer.
    function Pop
      (Reader : in out Reader_Type; Event : out B.E.Event_Type)
       return Error_Type;
 
-   -- Synchronizes the Reader with the buffer
+   --  Synchronizes the Reader with the buffer
    function Synchronize (Reader : in out Reader_Type) return Gap_Error_Type;
 
-   -- Detects a gap.
+   --  Detects a gap.
    function Gap (Reader : in out Reader_Type) return Gap_Error_Type;
 
-   -- Get reader length
+   --  Get reader length
    function Length (Reader : Reader_Type) return B.Index_Type;
 
-   -- Trace function
+   --  Trace function
    procedure Trace (Reader : in out Reader_Type);
 
 private
 
    type Reader_Type is tagged record
-      -- Constant reference to a ring Buffer this Reader reads from.
+      --  Constant reference to a ring Buffer this Reader reads from.
       Buffer    : Buffer_Access_Type;
-      -- The reader contains a top and a bottom
+      --  The reader contains a top and a bottom
       Top       : B.Index_Type := 0;
-      -- The bottom of the reader
+      --  The bottom of the reader
       Bottom    : B.Index_Type := 0;
-      -- The timestamp of the reader to detect gaps
+      --  The timestamp of the reader to detect gaps
       Timestamp : B.E.Time_Type;
    end record;
 

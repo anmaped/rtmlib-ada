@@ -30,43 +30,49 @@ package Buffer is
    subtype Index_Type is Natural range 0 .. N;
    subtype Writer_Count is Natural range 0 .. 255;
 
-   -- Increment top of the buffer
+   Size : constant Index_Type := N;
+
+   --  Increment top of the buffer
    procedure Increment_Top (Buffer : in out Buffer_Type);
+   pragma Inline (Increment_Top);
 
-   -- Decrement top of the buffer
+   --  Decrement top of the buffer
    procedure Decrement_Top (Buffer : in out Buffer_Type);
+   pragma Inline (Decrement_Top);
 
-   -- Increment bottom of the buffer
+   --  Increment bottom of the buffer
    procedure Increment_Bottom (Buffer : in out Buffer_Type);
+   pragma Inline (Increment_Bottom);
 
-   -- Construct a new Buffer_Type
+   --  Construct a new Buffer_Type
    function Create return Buffer_Type;
+   pragma Inline (Create);
 
-   -- Push a node
+   --  Push a node
    function Push
      (Buffer : in out Buffer_Type; Node : in E.Event_Type) return Error_Type;
 
-   -- Pull a node in FIFO order
+   --  Pull a node in FIFO order
    function Pull
      (Buffer : in out Buffer_Type; Node : out E.Event_Type) return Error_Type;
 
-   -- Pop event
+   --  Pop event
    function Pop
      (Buffer : in out Buffer_Type; Node : out E.Event_Type) return Error_Type;
 
-   -- Get the node at index without changing the state
+   --  Get the node at index without changing the state
    function Read
      (Buffer : in out Buffer_Type;
       Index  : in Index_Type;
       Node   : out E.Event_Type) return Error_Type;
 
-   -- Set a node at the index without changing the state
+   --  Set a node at the index without changing the state
    function Write
      (Buffer : in out Buffer_Type;
       Node   : in E.Event_Type;
       Index  : in Index_Type) return Error_Type;
 
-   -- Get the state of the buffer without timestamps
+   --  Get the state of the buffer without timestamps
    procedure State
      (Buffer : in Buffer_Type; Bottom : out Index_Type; Top : out Index_Type);
 
@@ -77,13 +83,13 @@ package Buffer is
       TS     : out E.Time_Type;
       TS_T   : out E.Time_Type);
 
-   -- Get the length of the buffer
+   --  Get the length of the buffer
    function Length (Buffer : in Buffer_Type) return Index_Type;
 
-   -- Trace the state and the buffer content into the stdout
+   --  Trace the state and the buffer content into the stdout
    procedure Trace (Buffer : in Buffer_Type);
 
-   -- Increment writer counter
+   --  Increment writer counter
    procedure Increment_Writer (Buffer : in out Buffer_Type);
 
 private
