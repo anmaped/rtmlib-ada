@@ -45,7 +45,7 @@ package Writer is
 
 private
 
-   type Writer_Type is tagged record
+   type Writer_Type is record
       Buffer : Buffer_Access_Type;
    end record;
 

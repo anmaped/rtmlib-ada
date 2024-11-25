@@ -95,7 +95,7 @@ package Buffer is
 private
 
    type Arr_Type is array (Index_Type) of E.Event_Type;
-   type Buffer_Type is record
+   type Buffer_Type is tagged record
       Arr    : Arr_Type;
       Top    : Index_Type := 0;
       Bottom : Index_Type := 0;

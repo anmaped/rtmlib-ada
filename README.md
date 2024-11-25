@@ -7,7 +7,7 @@
 
 rtmlib-ada is a lean library (for Ada/SPARK2014) that supports atomic operations on shared memory circular buffers and implements a monitor abstraction layer for infinite sequences of time-stamped symbols or events.
 
-The rtmlib-ada is not just yet another [rtmlib2](https://github.com/anmaped/rtmlib/tree/master) library (designed for Ada/SPARK2014 instead of C++11). It is an efficient library for embedded **safety-critical** systems with support for **hardware acceleration** for energy efficient monitoring. The rtmlib-ada can support software and hardware monitoring via dedicated CPU and FPGA devices.
+The rtmlib-ada is not just yet another [rtmlib2](https://github.com/anmaped/rtmlib/tree/master) library (designed for Ada/SPARK2014 instead of C++11). It is an efficient library for embedded **safety-critical** systems with support for **hardware acceleration** for energy efficient monitoring. The rtmlib-ada can support software and hardware monitoring via dedicated CPU or FPGA devices.
 
 This hybrid approach allows us to offload processor intensive monitors to the FPGA and connect CPU cores to the fabric monitor accelerators.
 
