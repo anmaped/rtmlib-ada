@@ -27,6 +27,8 @@ is
 
    type Buffer_Atomic_Type is limited private;
 
+   subtype Page_Count is Natural range 0 .. Writer_Count'Last * 2;
+
    --  Construct a new Buffer_Type
    function Create return Buffer_Atomic_Type;
    pragma Inline (Create);
@@ -38,14 +40,27 @@ is
    function Set_Line
      (Buffer : in out Buffer_Atomic_Type; L : Unsigned_64) return Error_Type;
 
+   function Exchange_Line_If
+     (Buffer        : in out Buffer_Atomic_Type;
+      Expected_Line : access Unsigned_64;
+      New_Line      : Unsigned_64) return Boolean;
+
+   --  Get Page
+   function Get_Writer_Page_Address
+     (Buffer : in out Buffer_Atomic_Type; Id : Page_Count)
+      return System.Address;
+
    --  Register Writer Pages
    function Register_Writer_Pages
      (Buffer : in out Buffer_Atomic_Type; Page : in System.Address)
-      return Writer_Count;
+      return Page_Count;
+
+   --  Print buffer
+   procedure Trace (Buffer : in Buffer_Atomic_Type);
 
 private
 
-   type Writer_Pages_Address_Array is array (Writer_Count) of System.Address;
+   type Writer_Pages_Address_Array is array (Page_Count) of System.Address;
 
    type Buffer_Atomic_Type is new Buffer_Type with record
       Line         : aliased Unsigned_64 := 0;

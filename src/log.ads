@@ -21,14 +21,21 @@ with GNAT.Source_Info;
 
 package Log is
 
+   verbose_level : Integer := 1;
+
+   procedure Set_Verbose_Level (Level : Integer);
+   pragma Inline (Set_Verbose_Level);
+
    procedure Error
      (Msg      : String;
       Entity   : String := GNAT.Source_Info.Enclosing_Entity;
       Location : String := GNAT.Source_Info.Source_Location);
+   pragma Inline (Error);
 
    procedure Msg
      (Msg      : String;
       Entity   : String := GNAT.Source_Info.Enclosing_Entity;
       Location : String := GNAT.Source_Info.Source_Location);
+   pragma Inline (Msg);
 
 end Log;

@@ -17,6 +17,7 @@
 --  You should have received a copy of the GNU General Public License
 --  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+with System.Address_To_Access_Conversions;
 with Buffer.Atomic;
 
 generic
@@ -33,6 +34,9 @@ is
    function Create
      (Buffer : Buffer_Atomic_Access_Type) return Writer_Atomic_Type;
 
+   --  Register the pages of the writer.
+   procedure Register_Pages (Writer : in out Writer_Atomic_Type);
+
    --  Push an event to the Buffer.
    procedure Push
      (Writer : in out Writer_Atomic_Type; Data : in B.E.Event_Type);
@@ -40,6 +44,8 @@ is
    --  Force push an event to the Buffer.
    procedure Push_All
      (Writer : in out Writer_Atomic_Type; Data : in B.E.Event_Type);
+
+   procedure Switch_Page (Writer : in out Writer_Atomic_Type);
 
 private
 
@@ -56,6 +62,9 @@ private
       Event  : B.E.Event_Type;
    end record;
 
+   package Convert_Page_Type is new
+     System.Address_To_Access_Conversions (Page_Type);
+
    type Pages_Array is array (Page_Id_Type) of Page_Type;
 
    type Writer_Atomic_Type is record
@@ -64,8 +73,12 @@ private
       Pages   : Pages_Array;
       --  the atomic page id (to track inside the writer; starts with One)
       Page_Id : Page_Id_Type := 1;
-      Id      : Natural := 0;  --  this value goes from 0 to 255/2
+      Id      : BA.Page_Count := 0;  --  this value goes from 0 to 255/2
    end record;
+
+   procedure Print_Page (Page : Page_Type);
+
+   procedure Print_Page_Address (Page : Page_Type);
 
 
 end Writer.Atomic;

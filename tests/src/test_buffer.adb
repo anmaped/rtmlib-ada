@@ -9,7 +9,7 @@ package body Test_Buffer is
    procedure Test_Push_and_Pop (T : in out Test_Cases.Test_Case'Class) is
       pragma Unreferenced (T);
 
-      ID : constant := 1;
+      ID    : constant := 1;
       node0 : constant Nat_Event.Event_Type :=
         Nat_Event.Create (Data => ID, Time => Duration (0.0));
       node1 : constant Nat_Event.Event_Type :=
@@ -48,7 +48,7 @@ package body Test_Buffer is
       for I in 0 .. Nat_Buffer.Index_Type'Last loop
          Set_Time (ev, Duration (I));
 
-         if I >= (Nat_Buffer.Index_Type'Last - 1) - 2 then
+         if I >= Nat_Buffer.Index_Type'Last - 2 then
             Assert
               (Push (buf, ev) = BUFFER_OVERFLOW, "Should be BUFFER_OVERFLOW");
          else
@@ -58,7 +58,7 @@ package body Test_Buffer is
 
       Assert (Read (buf, 0, ev) = OK, "Should be OK");
       Assert
-        (Get_Time (ev) = Duration ((Nat_Buffer.Index_Type'Last - 1) - 1),
+        (Get_Time (ev) = Duration (Nat_Buffer.Index_Type'Last - 1),
          "Should be 0");
 
       for I in 0 .. 109 loop
@@ -75,7 +75,7 @@ package body Test_Buffer is
    procedure Test_Push_and_Pull (T : in out Test_Cases.Test_Case'Class) is
       pragma Unreferenced (T);
 
-      ID : constant := 1;
+      ID    : constant := 1;
       node0 : constant Nat_Event.Event_Type :=
         Nat_Event.Create (Data => ID, Time => Duration (0.0));
       node1 : constant Nat_Event.Event_Type :=
@@ -110,7 +110,7 @@ package body Test_Buffer is
       for I in 0 .. Nat_Buffer.Index_Type'Last loop
          Set_Time (ev, Duration (I));
 
-         if I >= (Nat_Buffer.Index_Type'Last - 1) - 2 then
+         if I >= Nat_Buffer.Index_Type'Last - 2 then
             Assert
               (Push (buf, ev) = BUFFER_OVERFLOW, "Should be BUFFER_OVERFLOW");
          else
@@ -119,7 +119,7 @@ package body Test_Buffer is
       end loop;
 
       for I in 0 .. 109 loop
-         if I >= (Nat_Buffer.Index_Type'Last - 1) then
+         if I >= Nat_Buffer.Index_Type'Last then
             Assert (Pull (buf, ev) = EMPTY, "Should be EMPTY");
          else
             Assert (Pull (buf, ev) = OK, "Should be OK");

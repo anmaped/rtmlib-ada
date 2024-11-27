@@ -27,8 +27,6 @@ package Test_Writer is
    package Nat_Writer_Atomic is new
      Nat_Writer.Atomic (BA => Nat_Atomic_Buffer);
 
-   writer : Nat_Writer_Atomic.Writer_Atomic_Type :=
-     Nat_Writer_Atomic.Create (buf'Access);
 
    type Test_Writer is new Test_Cases.Test_Case with null record;
 

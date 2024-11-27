@@ -21,6 +21,11 @@ with Ada.Text_IO;
 
 package body Log is
 
+   procedure Set_Verbose_Level (Level : Integer) is
+   begin
+      verbose_level := Level;
+   end Set_Verbose_Level;
+
    procedure Error
      (Msg      : String;
       Entity   : String := GNAT.Source_Info.Enclosing_Entity;
@@ -35,7 +40,9 @@ package body Log is
       Entity   : String := GNAT.Source_Info.Enclosing_Entity;
       Location : String := GNAT.Source_Info.Source_Location) is
    begin
-      Ada.Text_IO.Put_Line ("LOG: " & Location & ": " & Msg);
+      if verbose_level >= 1 then
+         Ada.Text_IO.Put_Line ("LOG: " & Location & ": " & Msg);
+      end if;
    end Msg;
 
 end Log;

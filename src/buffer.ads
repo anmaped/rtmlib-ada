@@ -32,6 +32,14 @@ package Buffer is
 
    Size : constant Index_Type := N;
 
+   --  Increment index
+   function Increment (V : Index_Type) return Index_Type;
+   pragma Inline (Increment);
+
+   --  Decrement index
+   function Decrement (V : in Index_Type) return Index_Type;
+   pragma Inline (Decrement);
+
    --  Increment top of the buffer
    procedure Increment_Top (Buffer : in out Buffer_Type);
    pragma Inline (Increment_Top);

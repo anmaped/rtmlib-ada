@@ -21,35 +21,37 @@ with Log;
 
 package body Buffer is
 
-   procedure Increment_Top (Buffer : in out Buffer_Type) is
-      T : Natural := Buffer.Top; --  [TODO: atomic]
+   function Increment (V : Index_Type) return Index_Type is
    begin
-      T := T + 1;
-      if T >= N then
-         T := 0;
+      if V >= N then
+         return 0;
+      else
+         return V + 1;
       end if;
-      Buffer.Top := T; --  [TODO: atomic]
+   end Increment;
+
+   function Decrement (V : in Index_Type) return Index_Type is
+   begin
+      if V = 0 then
+         return N - 1;
+      else
+         return V - 1;
+      end if;
+   end Decrement;
+
+   procedure Increment_Top (Buffer : in out Buffer_Type) is
+   begin
+      Buffer.Top := Increment (Buffer.Top);
    end Increment_Top;
 
    procedure Decrement_Top (Buffer : in out Buffer_Type) is
-      T : Natural := Buffer.Top; --  [TODO: atomic]
    begin
-      if T = 0 then
-         T := N - 1;
-      else
-         T := T - 1;
-      end if;
-      Buffer.Top := T; --  [TODO: atomic]
+      Buffer.Top := Decrement (Buffer.Top);
    end Decrement_Top;
 
    procedure Increment_Bottom (Buffer : in out Buffer_Type) is
-      B : Natural := Buffer.Bottom; -- [TODO: atomic]
    begin
-      B := B + 1;
-      if B >= N then
-         B := 0;
-      end if;
-      Buffer.Bottom := B; --  [TODO: atomic]
+      Buffer.Bottom := Increment (Buffer.Bottom);
    end Increment_Bottom;
 
    function Create return Buffer_Type is
