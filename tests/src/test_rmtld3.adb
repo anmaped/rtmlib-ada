@@ -85,8 +85,8 @@ package body Test_Rmtld3 is
         (X_rtm_compute_1daa_1.Prop_459698 (trace, Duration (0)) = Unknown,
          "Should be Unknown");
 
-      Assert (Push (buf, x) = OK, "Should be OK");
-      Assert (Push (buf, y) = OK, "Should be OK");
+      Assert (Push (buf, x) = No_Error, "Should be No_Error");
+      Assert (Push (buf, y) = No_Error, "Should be No_Error");
 
       Assert (Nat_Reader_RMTLD3.Synchronize (trace) = Gap, "Should be Gap");
 
@@ -99,7 +99,7 @@ package body Test_Rmtld3 is
 
       Nat_Reader_RMTLD3.Trace (trace);
 
-      Assert (Push (buf, z) = OK, "Should be OK");
+      Assert (Push (buf, z) = No_Error, "Should be No_Error");
 
       Assert
         (Nat_Reader_RMTLD3.Synchronize (trace) = Gap,
@@ -151,7 +151,7 @@ package body Test_Rmtld3 is
    begin
       --  reset the buffer
       loop
-         exit when Pop (buf, ev) = EMPTY;
+         exit when Pop (buf, ev) = Empty_Error;
       end loop;
 
       --  fill the buffer with events

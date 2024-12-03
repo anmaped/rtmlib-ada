@@ -26,14 +26,6 @@ package Writer is
    type Writer_Type is private;
    type Buffer_Access_Type is access all B.Buffer_Type;
 
-   --  Increment top of the writer
-   procedure Increment_Writer_Top
-     (Writer : in out Writer_Type; Cursor : in out Natural);
-
-   --  Increment bottom of the writer
-   procedure Increment_Writer_Bottom
-     (Writer : in out Writer_Type; Cursor : in out Natural);
-
    --  Instantiates a new RTML_writer.
    function Create (Buffer : Buffer_Access_Type) return Writer_Type;
 

@@ -10,19 +10,28 @@ package body Test_Writer is
       task A;
       task B;
       task C;
+      use Nat_Writer_Atomic;
 
       task body A is
          writer1 : Nat_Writer_Atomic.Writer_Atomic_Type :=
            Nat_Writer_Atomic.Create (buf'Access);
+         err     : Nat_Writer_Atomic.Status_Type;
       begin
          Nat_Writer_Atomic.Register_Pages (writer1);
 
          for I in 1 .. 255 loop
-            delay 0.00003;
+            delay 0.000003;
 
-            Nat_Writer_Atomic.Push (writer1, ev);
+            err := Nat_Writer_Atomic.Push (writer1, ev);
+
+            if err = Nat_Writer_Atomic.Overwrite then
+               Assert
+                 (True, "Task A should reach here: Buffer Overwrite Error");
+            end if;
 
          end loop;
+
+         delay 3.0;
 
       exception
          when E : others =>
@@ -36,16 +45,24 @@ package body Test_Writer is
       task body B is
          writer2 : Nat_Writer_Atomic.Writer_Atomic_Type :=
            Nat_Writer_Atomic.Create (buf'Access);
+         err     : Nat_Writer_Atomic.Status_Type;
       begin
          Nat_Atomic_Buffer.Trace (buf);
          Nat_Writer_Atomic.Register_Pages (writer2);
 
          for I in 1 .. 255 loop
-            delay 0.00007;
+            delay 0.000007;
 
-            Nat_Writer_Atomic.Push (writer2, ev);
+            err := Nat_Writer_Atomic.Push (writer2, ev);
+
+            if err = Nat_Writer_Atomic.Overwrite then
+               Assert
+                 (True, "Task B should reach here: Buffer Overwrite Error");
+            end if;
 
          end loop;
+
+         delay 3.0;
 
       exception
          when E : others =>

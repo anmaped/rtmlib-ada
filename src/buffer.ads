@@ -25,7 +25,12 @@ generic
 package Buffer is
 
    type Buffer_Type is limited private;
-   type Error_Type is (OK, EMPTY, BUFFER_OVERFLOW, OUT_OF_BOUND, UNSAFE);
+   type Error_Type is
+     (No_Error,
+      Empty_Error,
+      Buffer_Overflow_Error,
+      Out_of_Bound_Error,
+      Unsafe_Error);
 
    subtype Index_Type is Natural range 0 .. N;
    subtype Writer_Count is Natural range 0 .. 255;
@@ -59,6 +64,7 @@ package Buffer is
    --  Push a node
    function Push
      (Buffer : in out Buffer_Type; Node : in E.Event_Type) return Error_Type;
+   pragma Inline (Push);
 
    --  Pull a node in FIFO order
    function Pull

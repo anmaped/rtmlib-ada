@@ -61,7 +61,7 @@ package body Reader is
       Delt : constant Integer := 1;
    begin
       if Length (Reader) > Delt then
-         if Read (Reader.Buffer.all, Reader.Bottom, Event) /= OK then
+         if Read (Reader.Buffer.all, Reader.Bottom, Event) /= No_Error then
             return Read_Error;
          end if;
 
@@ -76,7 +76,7 @@ package body Reader is
             & " top:"
             & Natural'Image (Reader.Top));
 
-         if Read (Reader.Buffer.all, Reader.Bottom, Event) = OK then
+         if Read (Reader.Buffer.all, Reader.Bottom, Event) = No_Error then
             Reader.Timestamp := Get_Time (Event);
 
             if Gap (Reader) /= No_Gap then
@@ -98,7 +98,7 @@ package body Reader is
    begin
       if Length (Reader) > 0 then
          Reader.Top := Reader.Top - 1;
-         if Read (Reader.Buffer.all, Reader.Top, Event) /= OK then
+         if Read (Reader.Buffer.all, Reader.Top, Event) /= No_Error then
             return Read_Error;
          end if;
 
@@ -165,7 +165,7 @@ package body Reader is
    function Gap (Reader : in out Reader_Type) return Gap_Error_Type is
       Event : Event_Type;
    begin
-      if Read (Reader.Buffer.all, Reader.Bottom, Event) = OK then
+      if Read (Reader.Buffer.all, Reader.Bottom, Event) = No_Error then
          if Reader.Timestamp < Get_Time (Event) then
             return Gap;
          end if;

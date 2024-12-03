@@ -33,6 +33,11 @@ is
    function Create return Buffer_Atomic_Type;
    pragma Inline (Create);
 
+   --  Push a node
+   function Push
+     (Buffer : in out Buffer_Atomic_Type; Node : in E.Event_Type)
+      return Error_Type;
+
    --  Read buffer line
    function Get_Line (Buffer : in out Buffer_Atomic_Type) return Unsigned_64;
 
@@ -57,6 +62,9 @@ is
 
    --  Print buffer
    procedure Trace (Buffer : in Buffer_Atomic_Type);
+
+   --  Increment writer counter
+   procedure Increment_Writer (Buffer : in out Buffer_Atomic_Type);
 
 private
 

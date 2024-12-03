@@ -30,6 +30,8 @@ is
    type Writer_Atomic_Type is private;
    type Buffer_Atomic_Access_Type is access all BA.Buffer_Atomic_Type;
 
+   type Status_Type is (Overwrite, Write_Sucess, Write_Fail);
+
    --  Instantiates a new RTML_writer.
    function Create
      (Buffer : Buffer_Atomic_Access_Type) return Writer_Atomic_Type;
@@ -38,23 +40,33 @@ is
    procedure Register_Pages (Writer : in out Writer_Atomic_Type);
 
    --  Push an event to the Buffer.
-   procedure Push
-     (Writer : in out Writer_Atomic_Type; Data : in B.E.Event_Type);
+   function Push
+     (Writer : in out Writer_Atomic_Type; Data : in B.E.Event_Type)
+      return Status_Type;
 
    --  Force push an event to the Buffer.
    procedure Push_All
      (Writer : in out Writer_Atomic_Type; Data : in B.E.Event_Type);
 
+   function Next_Page (Page_Id : Page_Id_Type) return Page_Id_Type;
+
+   function Previous_Page (Page_Id : Page_Id_Type) return Page_Id_Type;
+
    procedure Switch_Page (Writer : in out Writer_Atomic_Type);
+
+   procedure Switch_Page_Back (Writer : in out Writer_Atomic_Type);
+
 
 private
 
-   type Page_Id_Type is range 1 .. 2;
+   --  this range should be set by the user depending on the frequency of the
+   --  machine and the number of writers
+   type Page_Id_Type is range 1 .. 5;
 
-   type Status_Type is (Ready, Free);
+   type Page_Status_Type is (Ready, Free);
 
    type Page_Type is record
-      Status : Status_Type := Free;
+      Status : Page_Status_Type := Free;
       Top    : B.Index_Type;
       Bottom : B.Index_Type;
       --  variables that can help to confirm that the last value is ready
@@ -76,9 +88,10 @@ private
       Id      : BA.Page_Count := 0;  --  this value goes from 0 to 255/2
    end record;
 
-   procedure Print_Page (Page : Page_Type);
+   procedure Print_Page (Writer : in Writer_Atomic_Type; Page : in Page_Type);
 
-   procedure Print_Page_Address (Page : Page_Type);
+   procedure Print_Page_Address
+     (Writer : in Writer_Atomic_Type; Page : in Page_Type);
 
 
 end Writer.Atomic;

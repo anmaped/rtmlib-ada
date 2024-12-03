@@ -18,13 +18,13 @@ package body Test_Reader_Rmtld3 is
       Nat_Event.Trace (x);
       Nat_Event.Trace (y);
       err := Nat_Buffer.Push (buf, x);
-      Assert (err = Nat_Buffer.OK, "Push x should succeed");
+      Assert (err = Nat_Buffer.No_Error, "Push x should succeed");
       err := Nat_Buffer.Push (buf, y);
-      Assert (err = Nat_Buffer.OK, "Push y should succeed");
+      Assert (err = Nat_Buffer.No_Error, "Push y should succeed");
       err := Nat_Buffer.Push (buf, x);
-      Assert (err = Nat_Buffer.OK, "Push x should succeed");
+      Assert (err = Nat_Buffer.No_Error, "Push x should succeed");
       err := Nat_Buffer.Push (buf, y);
-      Assert (err = Nat_Buffer.OK, "Push y should succeed");
+      Assert (err = Nat_Buffer.No_Error, "Push y should succeed");
       Nat_Buffer.Trace (buf);
 
       err3 := Nat_Reader.Synchronize (reader);

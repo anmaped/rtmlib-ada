@@ -35,6 +35,13 @@ package body Buffer.Atomic is
          Writer_Pages => (others => System.Null_Address));
    end Create;
 
+   function Push
+     (Buffer : in out Buffer_Atomic_Type; Node : in E.Event_Type)
+      return Error_Type is
+   begin
+      return Push (Buffer_Type (Buffer), Node);
+   end Push;
+
    function Get_Line (Buffer : in out Buffer_Atomic_Type) return Unsigned_64 is
    begin
       return Atomic_Load_64 (Buffer.Line'Access);
@@ -44,7 +51,7 @@ package body Buffer.Atomic is
      (Buffer : in out Buffer_Atomic_Type; L : Unsigned_64) return Error_Type is
    begin
       Atomic_Store_64 (Buffer.Line'Access, L);
-      return OK;
+      return No_Error;
    end Set_Line;
 
    function Exchange_Line_If
@@ -105,5 +112,10 @@ package body Buffer.Atomic is
    begin
       Trace (Buffer_Type (Buffer));
    end Trace;
+
+   procedure Increment_Writer (Buffer : in out Buffer_Atomic_Type) is
+   begin
+      Increment_Writer (Buffer_Type (Buffer));
+   end Increment_Writer;
 
 end Buffer.Atomic;

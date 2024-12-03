@@ -62,46 +62,44 @@ package body Buffer is
    function Push
      (Buffer : in out Buffer_Type; Node : in E.Event_Type) return Error_Type
    is
-      T : Natural := Buffer.Top; -- [TODO: atomic]
-      B : Natural := Buffer.Bottom; -- [TODO: atomic]
+      isFull : Boolean;
    begin
-      Buffer.Arr (T) := Node;
+      Buffer.Arr (Buffer.Top) := Node;
 
       Increment_Top (Buffer);
 
-      T := Buffer.Top; --  Update T after increment
-      B := Buffer.Bottom; --  Ensure B is current
-
       --  Check if the buffer is full
-      if T = B then
+      isFull := Buffer.Top = Buffer.Bottom;
+      if isFull then
          --  Discard one element; the buffer is now moving forward and
          --  replacing the last elements (it may originate a gap)
          Increment_Bottom (Buffer);
+
       end if;
 
       Log.Msg
         ("[Buffer.Push] length:"
          & Natural'Image (Length (Buffer))
          & " b:"
-         & Natural'Image (B)
+         & Natural'Image (Buffer.Bottom)
          & " t:"
-         & Natural'Image (T)
+         & Natural'Image (Buffer.Top)
          & " r:"
-         & Boolean'Image (T = B));
+         & Boolean'Image (isFull));
 
-      if T = B then
-         return BUFFER_OVERFLOW;
+      if isFull then
+         return Buffer_Overflow_Error;
       elsif Buffer.Writer > 1 then
-         return UNSAFE;
+         return Unsafe_Error;
       else
-         return OK;
+         return No_Error;
       end if;
    end Push;
 
    function Pull
      (Buffer : in out Buffer_Type; Node : out E.Event_Type) return Error_Type
    is
-      C : Boolean := Length (Buffer) > 0;
+      C : constant Boolean := Length (Buffer) > 0;
    begin
       Log.Msg
         ("[Buffer.Pull] length:"
@@ -116,16 +114,16 @@ package body Buffer is
       if C then
          Node := Buffer.Arr (Buffer.Bottom);
          Increment_Bottom (Buffer);
-         return (if Buffer.Writer > 1 then UNSAFE else OK);
+         return (if Buffer.Writer > 1 then Unsafe_Error else No_Error);
       else
-         return EMPTY;
+         return Empty_Error;
       end if;
    end Pull;
 
    function Pop
      (Buffer : in out Buffer_Type; Node : out E.Event_Type) return Error_Type
    is
-      C : Boolean := Length (Buffer) > 0;
+      C : constant Boolean := Length (Buffer) > 0;
    begin
       Log.Msg
         ("[Buffer.Pop] length:"
@@ -140,9 +138,9 @@ package body Buffer is
       if C then
          Decrement_Top (Buffer);
          Node := Buffer.Arr (Buffer.Top);
-         return (if Buffer.Writer > 1 then UNSAFE else OK);
+         return (if Buffer.Writer > 1 then Unsafe_Error else No_Error);
       else
-         return EMPTY;
+         return Empty_Error;
       end if;
    end Pop;
 
@@ -153,9 +151,9 @@ package body Buffer is
    begin
       if Index < N then
          Node := Buffer.Arr (Index);
-         return OK;
+         return No_Error;
       else
-         return OUT_OF_BOUND;
+         return Out_of_Bound_Error;
       end if;
    end Read;
 
@@ -166,9 +164,9 @@ package body Buffer is
    begin
       if Index < N then
          Buffer.Arr (Index) := Node;
-         return OK;
+         return No_Error;
       else
-         return OUT_OF_BOUND;
+         return Out_of_Bound_Error;
       end if;
    end Write;
 

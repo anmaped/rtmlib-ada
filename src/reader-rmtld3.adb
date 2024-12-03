@@ -88,7 +88,7 @@ package body Reader.Rmtld3 is
       Event : Event_Type;
    begin
 
-      if B.Read (Reader.Buffer.all, Cursor, Event) = B.OK then
+      if B.Read (Reader.Buffer.all, Cursor, Event) = B.No_Error then
          Reader.Cursor := Cursor;
          return Available;
       else
@@ -145,7 +145,7 @@ package body Reader.Rmtld3 is
    begin
 
       if Length (Reader) > 0 then
-         if B.Read (Reader.Buffer.all, Reader.Cursor, Event) /= B.OK then
+         if B.Read (Reader.Buffer.all, Reader.Cursor, Event) /= B.No_Error then
             return Read_Error;
          end if;
 
@@ -172,7 +172,7 @@ package body Reader.Rmtld3 is
      (Reader : in out RMTLD3_Reader_Type; Event : out Event_Type)
       return Error_Type is
    begin
-      if B.Read (Reader.Buffer.all, Reader.Cursor, Event) = B.OK then
+      if B.Read (Reader.Buffer.all, Reader.Cursor, Event) = B.No_Error then
          return Available;
       else
          return Unavailable;
@@ -190,7 +190,7 @@ package body Reader.Rmtld3 is
                      (if Reader.Cursor + 1 >= B.N then 0
                       else Reader.Cursor + 1),
                      Event)
-                  = OK)
+                  = No_Error)
       then
          return Available;
       else
@@ -217,7 +217,7 @@ package body Reader.Rmtld3 is
                     (if Reader.Cursor - 1 < 0 then B.N - 1
                      else Reader.Cursor - 1),
                     Event)
-                 = B.OK
+                 = B.No_Error
       then
          return Available;
       else

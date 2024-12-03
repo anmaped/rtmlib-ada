@@ -23,24 +23,6 @@ is
 
    use B;
 
-   procedure Increment_Writer_Top
-     (Writer : in out Writer_Type; Cursor : in out Natural) is
-   begin
-      Cursor := Cursor + 1;
-      if Cursor >= B.Size then
-         Cursor := 0;
-      end if;
-   end Increment_Writer_Top;
-
-   procedure Increment_Writer_Bottom
-     (Writer : in out Writer_Type; Cursor : in out Natural) is
-   begin
-      Cursor := Cursor + 1;
-      if Cursor >= B.Size then
-         Cursor := 0;
-      end if;
-   end Increment_Writer_Bottom;
-
    function Create (Buffer : Buffer_Access_Type) return Writer_Type is
    begin
       B.Increment_Writer (Buffer.all);
@@ -50,7 +32,7 @@ is
    procedure Push (Writer : in out Writer_Type; Data : in B.E.Event_Type) is
    begin
 
-      if B.Push (Writer.Buffer.all, Data) /= B.OK then
+      if B.Push (Writer.Buffer.all, Data) /= B.No_Error then
          raise Program_Error with "Writer.Push: Buffer is full";
       end if;
 
