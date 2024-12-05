@@ -60,7 +60,7 @@ package body Buffer.Atomic is
       New_Line      : Unsigned_64) return Boolean is
    begin
 
-      Log.Msg
+      Log.Msg2
         ("[Buffer.Atomic.Exchange_Line_If] Buffer Address : "
          & System.Address_Image (Buffer.Line'Address));
 

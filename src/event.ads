@@ -71,5 +71,6 @@ private
       Data : Data_Type;
       Time : Time_Type;
    end record;
+   for Event_Type'Alignment use 64;
 
 end Event;

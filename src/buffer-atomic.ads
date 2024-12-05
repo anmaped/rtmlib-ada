@@ -75,5 +75,6 @@ private
       Writer_Pages : Writer_Pages_Address_Array :=
         (others => System.Null_Address);
    end record;
+   for Buffer_Atomic_Type'Alignment use 64;
 
 end Buffer.Atomic;

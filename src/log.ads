@@ -38,4 +38,9 @@ package Log is
       Location : String := GNAT.Source_Info.Source_Location);
    pragma Inline (Msg);
 
+   procedure Msg2
+     (Msg      : String;
+      Entity   : String := GNAT.Source_Info.Enclosing_Entity;
+      Location : String := GNAT.Source_Info.Source_Location);
+   pragma Inline (Msg2);
 end Log;

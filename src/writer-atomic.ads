@@ -71,8 +71,9 @@ private
       Bottom : B.Index_Type;
       --  variables that can help to confirm that the last value is ready
       Cursor : B.Index_Type;
-      Event  : B.E.Event_Type;
+      --  Event  : B.E.Event_Type;
    end record;
+   for Page_Type'Alignment use 64;
 
    package Convert_Page_Type is new
      System.Address_To_Access_Conversions (Page_Type);
@@ -80,9 +81,9 @@ private
    type Pages_Array is array (Page_Id_Type) of Page_Type;
 
    type Writer_Atomic_Type is record
-      Buffer  : Buffer_Atomic_Access_Type;
       --  the zeroed atomic page and id
       Pages   : Pages_Array;
+      Buffer  : Buffer_Atomic_Access_Type;
       --  the atomic page id (to track inside the writer; starts with One)
       Page_Id : Page_Id_Type := 1;
       Id      : BA.Page_Count := 0;  --  this value goes from 0 to 255/2

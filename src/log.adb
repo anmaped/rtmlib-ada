@@ -45,4 +45,14 @@ package body Log is
       end if;
    end Msg;
 
+   procedure Msg2
+     (Msg      : String;
+      Entity   : String := GNAT.Source_Info.Enclosing_Entity;
+      Location : String := GNAT.Source_Info.Source_Location) is
+   begin
+      if verbose_level >= 2 then
+         Ada.Text_IO.Put_Line ("LOG: " & Location & ": " & Msg);
+      end if;
+   end Msg2;
+
 end Log;

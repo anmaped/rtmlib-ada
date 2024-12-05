@@ -70,7 +70,7 @@ package body Writer.Atomic is
 
    begin
       --  Implementation of push
-      Log.Msg
+      Log.Msg2
         ("[Writer.Atomic.Push] Id=" & Writer.Id'Image & " Pushing data init.");
 
       loop
@@ -78,13 +78,13 @@ package body Writer.Atomic is
          --  each writer; later at least one free page is available)
          Switch_Page (Writer);
 
-         Log.Msg
+         Log.Msg2
            ("[Writer.Atomic.Push] Id="
             & Writer.Id'Image
             & " Switched page to "
             & Page_Id_Type'Image (Writer.Page_Id));
 
-         Log.Msg
+         Log.Msg2
            ("[Writer.Atomic.Push] Id="
             & Writer.Id'Image
             & " New Page Id = "
@@ -94,7 +94,7 @@ package body Writer.Atomic is
          --  the cas counter (last 24 bits)
          old_line := Get_Line (Writer.Buffer.all);
 
-         Log.Msg
+         Log.Msg2
            ("[Writer.Atomic.Push] Id="
             & Writer.Id'Image
             & " Old_line = "
@@ -110,7 +110,7 @@ package body Writer.Atomic is
            Get_Writer_Page_Address
              (Writer.Buffer.all, Page_Count (old_page_id));
 
-         Log.Msg
+         Log.Msg2
            ("[Writer.Atomic.Push] Id="
             & Writer.Id'Image
             & " Old_page From Address = "
@@ -123,7 +123,7 @@ package body Writer.Atomic is
          Print_Page (Writer, old_page);
          Print_Page_Address (Writer, old_page);
 
-         Log.Msg
+         Log.Msg2
            ("[Writer.Atomic.Push] Id="
             & Writer.Id'Image
             & " Old_cas_counter = "
@@ -140,7 +140,7 @@ package body Writer.Atomic is
                * 16#1000000#);
          new_line := new_line or (old_cas_counter + 1);
 
-         Log.Msg
+         Log.Msg2
            ("[Writer.Atomic.Push] Id="
             & Writer.Id'Image
             & " Writer.Id = "
@@ -148,7 +148,7 @@ package body Writer.Atomic is
             & " Writer.Page_Id = "
             & Page_Id_Type'Image (Writer.Page_Id));
 
-         Log.Msg
+         Log.Msg2
            ("[Writer.Atomic.Push] Id="
             & Writer.Id'Image
             & " New_cas_counter = "
@@ -156,7 +156,7 @@ package body Writer.Atomic is
             & " New_page_id = "
             & Unsigned_64'Image ((new_line and 16#FF000000#) / 16#1000000#));
 
-         Log.Msg
+         Log.Msg2
            ("[Writer.Atomic.Push] Id="
             & Writer.Id'Image
             & " New_line = "
@@ -179,7 +179,7 @@ package body Writer.Atomic is
             Writer.Pages (Writer.Page_Id).Bottom := old_page.Bottom;
          end if;
 
-         Log.Msg
+         Log.Msg2
            ("[Writer.Atomic.Push] Id=" & Writer.Id'Image & " Ready Page ...");
          Print_Page (Writer, Writer.Pages (Writer.Page_Id));
          Print_Page_Address (Writer, Writer.Pages (Writer.Page_Id));
@@ -273,16 +273,10 @@ package body Writer.Atomic is
       Log.Msg
         ("[Writer.Atomic.Print_Page] Id="
          & Writer.Id'Image
-         & " Page.Top = "
-         & B.Index_Type'Image (Page.Top));
-      Log.Msg
-        ("[Writer.Atomic.Print_Page] Id="
-         & Writer.Id'Image
          & " Page.Bottom = "
-         & B.Index_Type'Image (Page.Bottom));
-      Log.Msg
-        ("[Writer.Atomic.Print_Page] Id="
-         & Writer.Id'Image
+         & B.Index_Type'Image (Page.Bottom)
+         & " Page.Top = "
+         & B.Index_Type'Image (Page.Top)
          & " Page.Status = "
          & Page_Status_Type'Image (Page.Status));
    end Print_Page;
@@ -290,7 +284,7 @@ package body Writer.Atomic is
    procedure Print_Page_Address
      (Writer : Writer_Atomic_Type; Page : in Page_Type) is
    begin
-      Log.Msg
+      Log.Msg2
         ("[Writer.Atomic.Print_Page_Address] Id="
          & Writer.Id'Image
          & " Page.Address = "
